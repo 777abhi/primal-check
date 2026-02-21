@@ -1,4 +1,4 @@
-# Primal Check - Incremental Delivery Backlog
+# Primal Check - a Playwright Typescript Utility - Incremental Delivery Backlog
 
 This backlog tracks the development of the Primal Check project. It is designed to be consumed by an AI agent or developer to ensure features are delivered incrementally using Test-Driven Development (TDD).
 
