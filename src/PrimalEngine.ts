@@ -1,5 +1,6 @@
 import { Page } from '@playwright/test';
 import { SiteConfig, ExecutionMode } from './types';
+import { ChaosFuzzer } from './ChaosFuzzer';
 
 export class PrimalEngine {
   private page: Page;
@@ -54,11 +55,9 @@ export class PrimalEngine {
   }
 
   private async runGorilla(): Promise<void> {
-    // Randomised interaction: Click the first available visible button or link
-    // "randomised interaction" could imply picking a random element.
-    // But "clicking the first available" is the example.
-    // I will pick a random one from the available ones to be "randomised".
+    await this.fuzzForms();
 
+    // Randomised interaction: Click the first available visible button or link
     const interactables = this.page.locator('button:visible, a:visible');
     const count = await interactables.count();
 
@@ -68,6 +67,16 @@ export class PrimalEngine {
       await interactables.nth(randomIndex).click();
     } else {
       console.warn('No visible buttons or links found to interact with.');
+    }
+  }
+
+  private async fuzzForms(): Promise<void> {
+    const inputs = this.page.locator('input:visible, textarea:visible, select:visible');
+    const count = await inputs.count();
+
+    for (let i = 0; i < count; i++) {
+      const input = inputs.nth(i);
+      await ChaosFuzzer.fuzzInput(input);
     }
   }
 }
