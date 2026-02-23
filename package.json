@@ -4,7 +4,8 @@
   "description": "Primal Check is a lightweight, reliable QA automation utility built on top of Playwright.",
   "main": "index.js",
   "scripts": {
-    "test": "npx playwright test"
+    "test": "npx playwright test",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",

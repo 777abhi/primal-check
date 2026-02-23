@@ -9,3 +9,13 @@ Constraint: All architectural changes must be recorded here.
 Decision: Integrate Form Fuzzing into `GORILLA` mode within `PrimalEngine`.
 Reasoning: Form fuzzing is a form of chaos testing, fitting the `GORILLA` mode's purpose. It enhances the random interaction capabilities.
 Constraint: Ensure form inputs are filled with valid-ish data to avoid immediate validation errors, but still random enough to stress test.
+
+2026-02-23 - [Visual Verification: Screenshot Capture]
+Decision: Implemented `captureScreenshot` in `PrimalEngine` to run after execution.
+Reasoning: Visual evidence is crucial for debugging failures and verifying success in automated environments.
+Constraint: Filenames must be sanitized to avoid filesystem issues. Screenshots are saved to a configurable directory.
+
+2026-02-23 - [Unified Exports]
+Decision: Export `SiteConfig`, `ExecutionMode`, and `ScreenshotConfig` from `src/PrimalEngine.ts`.
+Reasoning: Simplifies imports for the user, allowing them to import everything from a single module.
+Constraint: Maintain `types.ts` as the source of truth for interfaces, but re-export them.

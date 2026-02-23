@@ -1,6 +1,9 @@
 import { Page } from '@playwright/test';
 import { SiteConfig, ExecutionMode } from './types';
 import { ChaosFuzzer } from './ChaosFuzzer';
+import * as path from 'path';
+
+export { SiteConfig, ExecutionMode, ScreenshotConfig } from './types';
 
 export class PrimalEngine {
   private page: Page;
@@ -20,6 +23,7 @@ export class PrimalEngine {
       this.page.on('pageerror', errorListener);
     }
 
+    let success = false;
     try {
       // Navigation
       try {
@@ -33,11 +37,37 @@ export class PrimalEngine {
       } else if (mode === ExecutionMode.GORILLA) {
         await this.runGorilla();
       }
+      success = true;
     } finally {
       // Cleanup listener
       if (mode === ExecutionMode.READ_ONLY) {
         this.page.off('pageerror', errorListener);
       }
+
+      if (config.screenshotConfig && config.screenshotConfig.enabled) {
+        const shouldCapture = (success && config.screenshotConfig.onSuccess) || (!success && config.screenshotConfig.onFailure);
+        if (shouldCapture) {
+          await this.captureScreenshot(config, mode, success);
+        }
+      }
+    }
+  }
+
+  private async captureScreenshot(config: SiteConfig, mode: ExecutionMode, success: boolean): Promise<void> {
+    const dir = config.screenshotConfig?.directory || './screenshots';
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const status = success ? 'success' : 'failure';
+    // Sanitize name
+    const sanitizedName = config.name.replace(/[^a-z0-9]/gi, '_');
+    const filename = `${sanitizedName}-${mode}-${status}-${timestamp}.png`;
+
+    // Construct full path. Note: Playwright handles directory creation.
+    const fullPath = path.join(dir, filename);
+
+    try {
+        await this.page.screenshot({ path: fullPath, fullPage: true });
+    } catch (e) {
+        console.warn(`Failed to capture screenshot:`, e);
     }
   }
 
