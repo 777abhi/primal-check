@@ -52,6 +52,7 @@ Designed for smoke testing and basic health verification.
 
 ### 2. GORILLA Mode (Chaos/Fuzz Testing)
 Designed to test application stability under random interaction.
+- **Scroll & Explore**: Automatically scrolls to the bottom of the page to trigger lazy-loading and reveal hidden elements before interaction.
 - **Form Fuzzing**: Automatically detects visible form fields (`input`, `textarea`, `select`) and injects random data.
 - **Random Interaction**: Automatically identifies interactive elements (buttons, links) and clicks one at random.
 - **Resilience**: Warns rather than failing if no interactive elements are found.
@@ -64,9 +65,9 @@ Designed to test application stability under random interaction.
 The following features are planned for incremental development to enhance the capabilities of Primal Check:
 
 ### Phase 2: Enhanced Interactions
-- **Scroll & Explore**: Implement scrolling behaviors to trigger lazy-loading and reveal hidden elements.
 - **Smart Navigation**: Instead of a single click, perform a short "walk" through the application (e.g., click -> wait -> click).
 - **Network Chaos**: Simulate network conditions (offline, slow 3G) and random request failures to test application resilience.
+- **Cookie & LocalStorage Fuzzing**: Randomly clear or mutate cookies and local storage to test state persistence and session handling.
 
 ### Phase 3: Visual Verification
 - **Visual Regression**: Compare current state against a baseline to detect visual changes.
