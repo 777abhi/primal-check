@@ -19,3 +19,8 @@ Constraint: Filenames must be sanitized to avoid filesystem issues. Screenshots 
 Decision: Export `SiteConfig`, `ExecutionMode`, and `ScreenshotConfig` from `src/PrimalEngine.ts`.
 Reasoning: Simplifies imports for the user, allowing them to import everything from a single module.
 Constraint: Maintain `types.ts` as the source of truth for interfaces, but re-export them.
+
+2026-02-24 - [Scroll & Explore]
+Decision: Implement `scrollAndExplore` in `PrimalEngine` and integrate it into `GORILLA` mode.
+Reasoning: Many modern applications use lazy loading. Scrolling is essential to discover and interact with elements that are not initially in the viewport or DOM.
+Constraint: Implement a safety limit on scrolling (max iterations or timeout) to prevent infinite loops on infinite scroll pages.

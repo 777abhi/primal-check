@@ -85,6 +85,7 @@ export class PrimalEngine {
   }
 
   private async runGorilla(): Promise<void> {
+    await this.scrollAndExplore();
     await this.fuzzForms();
 
     // Randomised interaction: Click the first available visible button or link
@@ -107,6 +108,37 @@ export class PrimalEngine {
     for (let i = 0; i < count; i++) {
       const input = inputs.nth(i);
       await ChaosFuzzer.fuzzInput(input);
+    }
+  }
+
+  /**
+   * Scrolls the page to the bottom to trigger lazy loading and reveal hidden elements.
+   * This is crucial for GORILLA mode to discover more interactable elements.
+   */
+  private async scrollAndExplore(): Promise<void> {
+    try {
+      await this.page.evaluate(async () => {
+        await new Promise<void>((resolve) => {
+          const distance = 100; // Pixels to scroll per step
+          const delay = 50;     // Milliseconds between steps
+          const maxScrolls = 500; // Safety limit (~50000px height)
+          let scrolls = 0;
+
+          const timer = setInterval(() => {
+            const scrollHeight = document.body.scrollHeight;
+            window.scrollBy(0, distance);
+            scrolls++;
+
+            // Check if we reached the bottom (with small tolerance) or hit the safety limit
+            if ((window.innerHeight + window.scrollY) >= scrollHeight - 5 || scrolls >= maxScrolls) {
+              clearInterval(timer);
+              resolve();
+            }
+          }, delay);
+        });
+      });
+    } catch (e) {
+      console.warn('Scroll interaction failed:', e);
     }
   }
 }
