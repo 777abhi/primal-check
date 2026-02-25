@@ -24,3 +24,8 @@ Constraint: Maintain `types.ts` as the source of truth for interfaces, but re-ex
 Decision: Implement `scrollAndExplore` in `PrimalEngine` and integrate it into `GORILLA` mode.
 Reasoning: Many modern applications use lazy loading. Scrolling is essential to discover and interact with elements that are not initially in the viewport or DOM.
 Constraint: Implement a safety limit on scrolling (max iterations or timeout) to prevent infinite loops on infinite scroll pages.
+
+2026-02-24 - [Network Chaos]
+Decision: Implemented `NetworkChaosConfig` and applied it via `page.route` and `context.setOffline`.
+Reasoning: To simulate real-world network instability and test application resilience in `GORILLA` mode.
+Constraint: Network chaos settings (latency, failure rate) must be configurable to avoid flaky tests in non-chaos scenarios. Cleanup of routes is implicitly handled by Playwright context closure, but `PrimalEngine` applies them per run.

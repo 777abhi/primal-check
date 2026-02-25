@@ -5,10 +5,18 @@ export interface ScreenshotConfig {
   onSuccess?: boolean;
 }
 
+export interface NetworkChaosConfig {
+  enabled: boolean;
+  offline?: boolean;
+  latency?: number; // ms
+  requestFailureRate?: number; // 0.0 to 1.0
+}
+
 export interface SiteConfig {
   name: string;
   url: string;
   screenshotConfig?: ScreenshotConfig;
+  networkChaosConfig?: NetworkChaosConfig;
 }
 
 export enum ExecutionMode {
