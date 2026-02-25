@@ -1,9 +1,9 @@
 import { Page } from '@playwright/test';
-import { SiteConfig, ExecutionMode } from './types';
+import { SiteConfig, ExecutionMode, NetworkChaosConfig } from './types';
 import { ChaosFuzzer } from './ChaosFuzzer';
 import * as path from 'path';
 
-export { SiteConfig, ExecutionMode, ScreenshotConfig } from './types';
+export { SiteConfig, ExecutionMode, ScreenshotConfig, NetworkChaosConfig } from './types';
 
 export class PrimalEngine {
   private page: Page;
@@ -25,6 +25,10 @@ export class PrimalEngine {
 
     let success = false;
     try {
+      if (mode === ExecutionMode.GORILLA && config.networkChaosConfig?.enabled) {
+        await this.applyNetworkChaos(config.networkChaosConfig);
+      }
+
       // Navigation
       try {
         await this.page.goto(config.url);
@@ -81,6 +85,37 @@ export class PrimalEngine {
     // Check if any errors were caught
     if (errors.length > 0) {
       throw new Error(`Console errors detected: ${errors.map(e => e.message).join(', ')}`);
+    }
+  }
+
+  private async applyNetworkChaos(chaos: NetworkChaosConfig): Promise<void> {
+    if (chaos.offline) {
+      await this.page.context().setOffline(true);
+    }
+
+    if ((chaos.latency && chaos.latency > 0) || (chaos.requestFailureRate && chaos.requestFailureRate > 0)) {
+      await this.page.route('**/*', async (route) => {
+        // Random failure
+        if (chaos.requestFailureRate && Math.random() < chaos.requestFailureRate) {
+          try {
+            await route.abort();
+            return;
+          } catch (e) {
+            // Ignore abort errors
+          }
+        }
+
+        // Latency
+        if (chaos.latency && chaos.latency > 0) {
+          await new Promise(resolve => setTimeout(resolve, chaos.latency));
+        }
+
+        try {
+          await route.continue();
+        } catch (e) {
+          // Ignore continue errors
+        }
+      });
     }
   }
 

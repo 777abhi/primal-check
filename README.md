@@ -54,6 +54,7 @@ Designed for smoke testing and basic health verification.
 Designed to test application stability under random interaction.
 - **Scroll & Explore**: Automatically scrolls to the bottom of the page to trigger lazy-loading and reveal hidden elements before interaction.
 - **Form Fuzzing**: Automatically detects visible form fields (`input`, `textarea`, `select`) and injects random data.
+- **Network Chaos**: Simulates network instability (offline mode, latency, request failures) to test resilience against connectivity issues.
 - **Random Interaction**: Automatically identifies interactive elements (buttons, links) and clicks one at random.
 - **Resilience**: Warns rather than failing if no interactive elements are found.
 
@@ -66,7 +67,6 @@ The following features are planned for incremental development to enhance the ca
 
 ### Phase 2: Enhanced Interactions
 - **Smart Navigation**: Instead of a single click, perform a short "walk" through the application (e.g., click -> wait -> click).
-- **Network Chaos**: Simulate network conditions (offline, slow 3G) and random request failures to test application resilience.
 - **Cookie & LocalStorage Fuzzing**: Randomly clear or mutate cookies and local storage to test state persistence and session handling.
 
 ### Phase 3: Visual Verification
@@ -79,3 +79,6 @@ The following features are planned for incremental development to enhance the ca
 ### Phase 5: Reporting & CLI
 - **HTML Reports**: Generate a human-readable report summarizing the run, errors found, and interactions performed.
 - **CLI Wrapper**: Allow running Primal Check directly from the command line without writing a test file manually (e.g., `npx primal-check --url https://example.com --mode GORILLA`).
+
+### Phase 6: AI & Intelligent Automation
+- **Exploratory Agent**: Autonomous agent that learns to navigate the site effectively using RL or LLM guidance, prioritizing critical user flows over random clicks.
