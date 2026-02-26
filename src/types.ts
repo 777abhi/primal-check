@@ -12,11 +12,17 @@ export interface NetworkChaosConfig {
   requestFailureRate?: number; // 0.0 to 1.0
 }
 
+export interface AccessibilityConfig {
+  enabled: boolean;
+  failOnViolation?: boolean;
+}
+
 export interface SiteConfig {
   name: string;
   url: string;
   screenshotConfig?: ScreenshotConfig;
   networkChaosConfig?: NetworkChaosConfig;
+  accessibilityConfig?: AccessibilityConfig;
 }
 
 export enum ExecutionMode {
