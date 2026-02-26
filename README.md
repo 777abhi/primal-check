@@ -7,7 +7,7 @@ Primal Check is a lightweight, reliable QA automation utility built on top of Pl
 Ensure you have Node.js installed. Then, install the necessary dependencies:
 
 ```bash
-npm install @playwright/test typescript ts-node
+npm install @playwright/test typescript ts-node @axe-core/playwright axe-core
 npx playwright install
 ```
 
@@ -33,6 +33,10 @@ test('Basic Health Check', async ({ page }) => {
       enabled: true,
       onFailure: true,
       onSuccess: false
+    },
+    accessibilityConfig: {
+      enabled: true,
+      failOnViolation: false // Set to true to fail the test on violations
     }
   };
 
@@ -49,6 +53,7 @@ Designed for smoke testing and basic health verification.
 - **Navigation Verification**: Ensures the page loads successfully.
 - **Body Visibility**: Checks if the `<body>` tag is visible, ensuring the page rendered content.
 - **Console Error Monitoring**: Listens for and reports any console exceptions or page errors that occur during load.
+- **Accessibility Check**: Scans the page for WCAG violations using `axe-core`. Can be configured to just log warnings or fail the test.
 
 ### 2. GORILLA Mode (Chaos/Fuzz Testing)
 Designed to test application stability under random interaction.
@@ -73,12 +78,10 @@ The following features are planned for incremental development to enhance the ca
 - **Visual Regression**: Compare current state against a baseline to detect visual changes.
 - **AI-Powered Analysis**: Analyze screenshots for potential UI issues or anomalies using AI models.
 
-### Phase 4: Accessibility & Compliance
-- **Accessibility Audit**: Integrate with tools like `axe-core` to automatically scan pages for WCAG violations during the `READ_ONLY` check.
-
-### Phase 5: Reporting & CLI
+### Phase 4: Reporting & CLI
 - **HTML Reports**: Generate a human-readable report summarizing the run, errors found, and interactions performed.
 - **CLI Wrapper**: Allow running Primal Check directly from the command line without writing a test file manually (e.g., `npx primal-check --url https://example.com --mode GORILLA`).
 
-### Phase 6: AI & Intelligent Automation
+### Phase 5: AI & Intelligent Automation
 - **Exploratory Agent**: Autonomous agent that learns to navigate the site effectively using RL or LLM guidance, prioritizing critical user flows over random clicks.
+- **Self-Healing Tests**: Using AI to automatically repair selectors or logic when the UI changes, reducing maintenance overhead.

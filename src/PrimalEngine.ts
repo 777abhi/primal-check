@@ -1,9 +1,10 @@
 import { Page } from '@playwright/test';
-import { SiteConfig, ExecutionMode, NetworkChaosConfig } from './types';
+import { SiteConfig, ExecutionMode, NetworkChaosConfig, AccessibilityConfig } from './types';
 import { ChaosFuzzer } from './ChaosFuzzer';
 import * as path from 'path';
+import AxeBuilder from '@axe-core/playwright';
 
-export { SiteConfig, ExecutionMode, ScreenshotConfig, NetworkChaosConfig } from './types';
+export { SiteConfig, ExecutionMode, ScreenshotConfig, NetworkChaosConfig, AccessibilityConfig } from './types';
 
 export class PrimalEngine {
   private page: Page;
@@ -37,7 +38,7 @@ export class PrimalEngine {
       }
 
       if (mode === ExecutionMode.READ_ONLY) {
-        await this.runReadOnly(errors);
+        await this.runReadOnly(config, errors);
       } else if (mode === ExecutionMode.GORILLA) {
         await this.runGorilla();
       }
@@ -75,16 +76,51 @@ export class PrimalEngine {
     }
   }
 
-  private async runReadOnly(errors: Error[]): Promise<void> {
+  private async runReadOnly(config: SiteConfig, errors: Error[]): Promise<void> {
     // Check body visibility
     const bodyVisible = await this.page.isVisible('body');
     if (!bodyVisible) {
       throw new Error('Body is not visible on the page.');
     }
 
+    // Check accessibility if enabled
+    if (config.accessibilityConfig && config.accessibilityConfig.enabled) {
+      await this.checkAccessibility(config.accessibilityConfig);
+    }
+
     // Check if any errors were caught
     if (errors.length > 0) {
       throw new Error(`Console errors detected: ${errors.map(e => e.message).join(', ')}`);
+    }
+  }
+
+  private async checkAccessibility(config: AccessibilityConfig): Promise<void> {
+    try {
+      const results = await new AxeBuilder({ page: this.page }).analyze();
+
+      if (results.violations.length > 0) {
+        const violationDetails = results.violations.map(v => {
+          return `${v.id} (${v.impact}): ${v.description} - Nodes: ${v.nodes.length}`;
+        }).join('\n');
+
+        const message = `Accessibility violations detected:\n${violationDetails}`;
+
+        // Log the violations
+        console.warn(message);
+
+        if (config.failOnViolation) {
+          throw new Error(message);
+        }
+      }
+    } catch (e) {
+      // Re-throw if it's the error we just threw, otherwise wrap or log?
+      // If it is the violation error, we want it to propagate.
+      if (e instanceof Error && e.message.startsWith('Accessibility violations detected')) {
+        throw e;
+      }
+      // If Axe fails for some reason
+      console.error('Accessibility check failed to run:', e);
+      throw new Error(`Accessibility check failed: ${e instanceof Error ? e.message : String(e)}`);
     }
   }
 

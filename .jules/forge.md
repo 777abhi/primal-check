@@ -29,3 +29,8 @@ Constraint: Implement a safety limit on scrolling (max iterations or timeout) to
 Decision: Implemented `NetworkChaosConfig` and applied it via `page.route` and `context.setOffline`.
 Reasoning: To simulate real-world network instability and test application resilience in `GORILLA` mode.
 Constraint: Network chaos settings (latency, failure rate) must be configurable to avoid flaky tests in non-chaos scenarios. Cleanup of routes is implicitly handled by Playwright context closure, but `PrimalEngine` applies them per run.
+
+2026-02-25 - [Accessibility & Compliance]
+Decision: Integrate `axe-core` via `@axe-core/playwright` into `READ_ONLY` mode.
+Reasoning: To provide automated WCAG compliance checks as part of the health check.
+Constraint: Accessibility checks can be heavy, so they should be optional (configured via `AccessibilityConfig`). Violations are logged, and can optionally fail the test based on configuration.
