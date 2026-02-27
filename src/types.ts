@@ -17,12 +17,17 @@ export interface AccessibilityConfig {
   failOnViolation?: boolean;
 }
 
+export interface StorageFuzzingConfig {
+  enabled: boolean;
+}
+
 export interface SiteConfig {
   name: string;
   url: string;
   screenshotConfig?: ScreenshotConfig;
   networkChaosConfig?: NetworkChaosConfig;
   accessibilityConfig?: AccessibilityConfig;
+  storageFuzzingConfig?: StorageFuzzingConfig;
 }
 
 export enum ExecutionMode {

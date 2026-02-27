@@ -1,10 +1,11 @@
 import { Page } from '@playwright/test';
-import { SiteConfig, ExecutionMode, NetworkChaosConfig, AccessibilityConfig } from './types';
+import { SiteConfig, ExecutionMode, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig } from './types';
 import { ChaosFuzzer } from './ChaosFuzzer';
+import { StorageFuzzer } from './StorageFuzzer';
 import * as path from 'path';
 import AxeBuilder from '@axe-core/playwright';
 
-export { SiteConfig, ExecutionMode, ScreenshotConfig, NetworkChaosConfig, AccessibilityConfig } from './types';
+export { SiteConfig, ExecutionMode, ScreenshotConfig, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig } from './types';
 
 export class PrimalEngine {
   private page: Page;
@@ -40,7 +41,7 @@ export class PrimalEngine {
       if (mode === ExecutionMode.READ_ONLY) {
         await this.runReadOnly(config, errors);
       } else if (mode === ExecutionMode.GORILLA) {
-        await this.runGorilla();
+        await this.runGorilla(config);
       }
       success = true;
     } finally {
@@ -155,9 +156,13 @@ export class PrimalEngine {
     }
   }
 
-  private async runGorilla(): Promise<void> {
+  private async runGorilla(config: SiteConfig): Promise<void> {
     await this.scrollAndExplore();
     await this.fuzzForms();
+
+    if (config.storageFuzzingConfig && config.storageFuzzingConfig.enabled) {
+      await StorageFuzzer.fuzz(this.page);
+    }
 
     // Randomised interaction: Click the first available visible button or link
     const interactables = this.page.locator('button:visible, a:visible');

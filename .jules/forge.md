@@ -34,3 +34,8 @@ Constraint: Network chaos settings (latency, failure rate) must be configurable 
 Decision: Integrate `axe-core` via `@axe-core/playwright` into `READ_ONLY` mode.
 Reasoning: To provide automated WCAG compliance checks as part of the health check.
 Constraint: Accessibility checks can be heavy, so they should be optional (configured via `AccessibilityConfig`). Violations are logged, and can optionally fail the test based on configuration.
+
+2026-02-25 - [Cookie & LocalStorage Fuzzing]
+Decision: Implemented `StorageFuzzer` to randomly clear or mutate cookies and LocalStorage in `GORILLA` mode.
+Reasoning: To test application resilience against state corruption or session loss, simulating user tampering or browser issues.
+Constraint: Fuzzing is destructive. It should only be enabled via explicit configuration (`StorageFuzzingConfig`) and is restricted to `GORILLA` mode.
