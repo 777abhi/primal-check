@@ -37,6 +37,9 @@ test('Basic Health Check', async ({ page }) => {
     accessibilityConfig: {
       enabled: true,
       failOnViolation: false // Set to true to fail the test on violations
+    },
+    storageFuzzingConfig: {
+      enabled: true // Enable cookie and local storage fuzzing in GORILLA mode
     }
   };
 
@@ -60,6 +63,7 @@ Designed to test application stability under random interaction.
 - **Scroll & Explore**: Automatically scrolls to the bottom of the page to trigger lazy-loading and reveal hidden elements before interaction.
 - **Form Fuzzing**: Automatically detects visible form fields (`input`, `textarea`, `select`) and injects random data.
 - **Network Chaos**: Simulates network instability (offline mode, latency, request failures) to test resilience against connectivity issues.
+- **Cookie & LocalStorage Fuzzing**: Randomly clear or mutate cookies and local storage to test state persistence and session handling.
 - **Random Interaction**: Automatically identifies interactive elements (buttons, links) and clicks one at random.
 - **Resilience**: Warns rather than failing if no interactive elements are found.
 
@@ -72,7 +76,7 @@ The following features are planned for incremental development to enhance the ca
 
 ### Phase 2: Enhanced Interactions
 - **Smart Navigation**: Instead of a single click, perform a short "walk" through the application (e.g., click -> wait -> click).
-- **Cookie & LocalStorage Fuzzing**: Randomly clear or mutate cookies and local storage to test state persistence and session handling.
+- **Network Traffic Analysis**: Monitor network requests for slow responses, large payloads, or duplicate requests to identify performance bottlenecks.
 
 ### Phase 3: Visual Verification
 - **Visual Regression**: Compare current state against a baseline to detect visual changes.
