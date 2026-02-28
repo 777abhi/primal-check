@@ -39,3 +39,8 @@ Constraint: Accessibility checks can be heavy, so they should be optional (confi
 Decision: Implemented `StorageFuzzer` to randomly clear or mutate cookies and LocalStorage in `GORILLA` mode.
 Reasoning: To test application resilience against state corruption or session loss, simulating user tampering or browser issues.
 Constraint: Fuzzing is destructive. It should only be enabled via explicit configuration (`StorageFuzzingConfig`) and is restricted to `GORILLA` mode.
+
+2026-02-28 - [Network Traffic Analysis]
+Decision: Isolated network traffic monitoring into a separate `NetworkTrafficAnalyzer` class and injected it conditionally via `NetworkTrafficConfig`.
+Reasoning: Keeps `PrimalEngine` from becoming a monolithic "god class". Analyzing timing and payloads demands its own local state (like `requestStartTimes`), validating the need for encapsulation.
+Constraint: Playwright's `request.timing()` metrics vary based on interceptors (e.g., `page.route()`). Always fallback gracefully to manual `Date.now()` differences when native timings are unreliable or missing.

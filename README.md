@@ -57,6 +57,7 @@ Designed for smoke testing and basic health verification.
 - **Body Visibility**: Checks if the `<body>` tag is visible, ensuring the page rendered content.
 - **Console Error Monitoring**: Listens for and reports any console exceptions or page errors that occur during load.
 - **Accessibility Check**: Scans the page for WCAG violations using `axe-core`. Can be configured to just log warnings or fail the test.
+- **Network Traffic Analysis**: Monitors network requests for slow responses or large payloads against configurable thresholds. Can be configured to just log issues or fail the test.
 
 ### 2. GORILLA Mode (Chaos/Fuzz Testing)
 Designed to test application stability under random interaction.
@@ -76,7 +77,6 @@ The following features are planned for incremental development to enhance the ca
 
 ### Phase 2: Enhanced Interactions
 - **Smart Navigation**: Instead of a single click, perform a short "walk" through the application (e.g., click -> wait -> click).
-- **Network Traffic Analysis**: Monitor network requests for slow responses, large payloads, or duplicate requests to identify performance bottlenecks.
 
 ### Phase 3: Visual Verification
 - **Visual Regression**: Compare current state against a baseline to detect visual changes.
@@ -89,3 +89,6 @@ The following features are planned for incremental development to enhance the ca
 ### Phase 5: AI & Intelligent Automation
 - **Exploratory Agent**: Autonomous agent that learns to navigate the site effectively using RL or LLM guidance, prioritizing critical user flows over random clicks.
 - **Self-Healing Tests**: Using AI to automatically repair selectors or logic when the UI changes, reducing maintenance overhead.
+
+### Phase 6: Performance Profiling
+- **Tracing & Web Vitals Integration**: Analyze CDP traces automatically, emitting performance scores (LCP, CLS, FID) alongside test runs to catch degraded metrics early.
