@@ -21,6 +21,13 @@ export interface StorageFuzzingConfig {
   enabled: boolean;
 }
 
+export interface NetworkTrafficConfig {
+  enabled: boolean;
+  slowRequestThreshold?: number; // ms
+  largePayloadThreshold?: number; // bytes
+  failOnIssues?: boolean;
+}
+
 export interface SiteConfig {
   name: string;
   url: string;
@@ -28,6 +35,7 @@ export interface SiteConfig {
   networkChaosConfig?: NetworkChaosConfig;
   accessibilityConfig?: AccessibilityConfig;
   storageFuzzingConfig?: StorageFuzzingConfig;
+  networkTrafficConfig?: NetworkTrafficConfig;
 }
 
 export enum ExecutionMode {

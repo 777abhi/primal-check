@@ -1,11 +1,12 @@
 import { Page } from '@playwright/test';
-import { SiteConfig, ExecutionMode, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig } from './types';
+import { SiteConfig, ExecutionMode, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig, NetworkTrafficConfig } from './types';
 import { ChaosFuzzer } from './ChaosFuzzer';
 import { StorageFuzzer } from './StorageFuzzer';
+import { NetworkTrafficAnalyzer } from './NetworkTrafficAnalyzer';
 import * as path from 'path';
 import AxeBuilder from '@axe-core/playwright';
 
-export { SiteConfig, ExecutionMode, ScreenshotConfig, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig } from './types';
+export { SiteConfig, ExecutionMode, ScreenshotConfig, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig, NetworkTrafficConfig } from './types';
 
 export class PrimalEngine {
   private page: Page;
@@ -20,6 +21,8 @@ export class PrimalEngine {
       errors.push(exception);
     };
 
+    let analyzer: NetworkTrafficAnalyzer | undefined;
+
     // Monitor console for pageerror events in READ_ONLY mode
     if (mode === ExecutionMode.READ_ONLY) {
       this.page.on('pageerror', errorListener);
@@ -27,6 +30,11 @@ export class PrimalEngine {
 
     let success = false;
     try {
+      if (config.networkTrafficConfig?.enabled) {
+        analyzer = new NetworkTrafficAnalyzer(this.page, config.networkTrafficConfig);
+        analyzer.attachListeners();
+      }
+
       if (mode === ExecutionMode.GORILLA && config.networkChaosConfig?.enabled) {
         await this.applyNetworkChaos(config.networkChaosConfig);
       }
@@ -43,11 +51,26 @@ export class PrimalEngine {
       } else if (mode === ExecutionMode.GORILLA) {
         await this.runGorilla(config);
       }
+
+      // Wait for network idle to ensure all requests are finished before checking
+      await this.page.waitForLoadState('networkidle').catch(() => {});
+
+      // Small explicit delay to allow Playwright's internal requestfinished events to process
+      await new Promise(resolve => setTimeout(resolve, 50));
+
+      if (analyzer) {
+        analyzer.throwIfIssues();
+      }
+
       success = true;
     } finally {
       // Cleanup listener
       if (mode === ExecutionMode.READ_ONLY) {
         this.page.off('pageerror', errorListener);
+      }
+
+      if (analyzer) {
+        analyzer.detachListeners();
       }
 
       if (config.screenshotConfig && config.screenshotConfig.enabled) {
