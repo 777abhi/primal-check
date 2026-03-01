@@ -65,7 +65,7 @@ Designed to test application stability under random interaction.
 - **Form Fuzzing**: Automatically detects visible form fields (`input`, `textarea`, `select`) and injects random data.
 - **Network Chaos**: Simulates network instability (offline mode, latency, request failures) to test resilience against connectivity issues.
 - **Cookie & LocalStorage Fuzzing**: Randomly clear or mutate cookies and local storage to test state persistence and session handling.
-- **Random Interaction**: Automatically identifies interactive elements (buttons, links) and clicks one at random.
+- **Smart Navigation**: Performs a configurable series of interactions ("walk") by identifying and interacting with random visible elements instead of a single interaction.
 - **Resilience**: Warns rather than failing if no interactive elements are found.
 
 ### Visual Verification
@@ -74,9 +74,6 @@ Designed to test application stability under random interaction.
 ## Development Roadmap
 
 The following features are planned for incremental development to enhance the capabilities of Primal Check:
-
-### Phase 2: Enhanced Interactions
-- **Smart Navigation**: Instead of a single click, perform a short "walk" through the application (e.g., click -> wait -> click).
 
 ### Phase 3: Visual Verification
 - **Visual Regression**: Compare current state against a baseline to detect visual changes.
@@ -92,3 +89,6 @@ The following features are planned for incremental development to enhance the ca
 
 ### Phase 6: Performance Profiling
 - **Tracing & Web Vitals Integration**: Analyze CDP traces automatically, emitting performance scores (LCP, CLS, FID) alongside test runs to catch degraded metrics early.
+
+### Phase 7: Cloud Integration
+- **Distributed Chaos**: Support running multiple Primal Check instances concurrently in cloud environments (e.g., AWS Fargate, GCP Cloud Run) to perform distributed load and chaos testing.
