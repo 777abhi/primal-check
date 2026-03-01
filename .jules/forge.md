@@ -44,3 +44,8 @@ Constraint: Fuzzing is destructive. It should only be enabled via explicit confi
 Decision: Isolated network traffic monitoring into a separate `NetworkTrafficAnalyzer` class and injected it conditionally via `NetworkTrafficConfig`.
 Reasoning: Keeps `PrimalEngine` from becoming a monolithic "god class". Analyzing timing and payloads demands its own local state (like `requestStartTimes`), validating the need for encapsulation.
 Constraint: Playwright's `request.timing()` metrics vary based on interceptors (e.g., `page.route()`). Always fallback gracefully to manual `Date.now()` differences when native timings are unreliable or missing.
+
+2026-03-01 - [Smart Navigation Integration]
+Decision: Introduced `SmartNavigationConfig` in `PrimalEngine` to optionally loop the random interaction logic in `GORILLA` mode.
+Reasoning: A single interaction rarely covers enough of the deep state required for chaos testing. Allowing a configurable series of interactions ("walk") deepens coverage.
+Constraint: Between steps, we must wait for network idle to avoid missing dynamically loaded elements, handling potential timeouts safely.

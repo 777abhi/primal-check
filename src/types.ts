@@ -28,6 +28,11 @@ export interface NetworkTrafficConfig {
   failOnIssues?: boolean;
 }
 
+export interface SmartNavigationConfig {
+  enabled: boolean;
+  steps?: number; // Number of interactions
+}
+
 export interface SiteConfig {
   name: string;
   url: string;
@@ -36,6 +41,7 @@ export interface SiteConfig {
   accessibilityConfig?: AccessibilityConfig;
   storageFuzzingConfig?: StorageFuzzingConfig;
   networkTrafficConfig?: NetworkTrafficConfig;
+  smartNavigationConfig?: SmartNavigationConfig;
 }
 
 export enum ExecutionMode {

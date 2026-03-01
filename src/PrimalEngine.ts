@@ -1,12 +1,12 @@
 import { Page } from '@playwright/test';
-import { SiteConfig, ExecutionMode, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig, NetworkTrafficConfig } from './types';
+import { SiteConfig, ExecutionMode, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig, NetworkTrafficConfig, SmartNavigationConfig } from './types';
 import { ChaosFuzzer } from './ChaosFuzzer';
 import { StorageFuzzer } from './StorageFuzzer';
 import { NetworkTrafficAnalyzer } from './NetworkTrafficAnalyzer';
 import * as path from 'path';
 import AxeBuilder from '@axe-core/playwright';
 
-export { SiteConfig, ExecutionMode, ScreenshotConfig, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig, NetworkTrafficConfig } from './types';
+export { SiteConfig, ExecutionMode, ScreenshotConfig, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig, NetworkTrafficConfig, SmartNavigationConfig } from './types';
 
 export class PrimalEngine {
   private page: Page;
@@ -187,16 +187,30 @@ export class PrimalEngine {
       await StorageFuzzer.fuzz(this.page);
     }
 
-    // Randomised interaction: Click the first available visible button or link
-    const interactables = this.page.locator('button:visible, a:visible');
-    const count = await interactables.count();
+    const steps = config.smartNavigationConfig?.enabled ? (config.smartNavigationConfig.steps || 1) : 1;
+    await this.performRandomInteractions(steps);
+  }
 
-    if (count > 0) {
-      // Pick a random index
-      const randomIndex = Math.floor(Math.random() * count);
-      await interactables.nth(randomIndex).click();
-    } else {
-      console.warn('No visible buttons or links found to interact with.');
+  private async performRandomInteractions(steps: number): Promise<void> {
+    for (let i = 0; i < steps; i++) {
+      // Randomised interaction: Click an available visible button or link
+      const interactables = this.page.locator('button:visible, a:visible');
+      const count = await interactables.count();
+
+      if (count > 0) {
+        // Pick a random index
+        const randomIndex = Math.floor(Math.random() * count);
+        try {
+          await interactables.nth(randomIndex).click();
+          // Wait for network idle to allow potential navigation or fetch requests to complete
+          await this.page.waitForLoadState('networkidle').catch(() => {});
+        } catch (e) {
+          console.warn('Failed to click interactable:', e);
+        }
+      } else {
+        console.warn('No visible buttons or links found to interact with.');
+        break; // If no interactables found, stop trying to interact
+      }
     }
   }
 
