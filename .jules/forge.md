@@ -49,3 +49,8 @@ Constraint: Playwright's `request.timing()` metrics vary based on interceptors (
 Decision: Introduced `SmartNavigationConfig` in `PrimalEngine` to optionally loop the random interaction logic in `GORILLA` mode.
 Reasoning: A single interaction rarely covers enough of the deep state required for chaos testing. Allowing a configurable series of interactions ("walk") deepens coverage.
 Constraint: Between steps, we must wait for network idle to avoid missing dynamically loaded elements, handling potential timeouts safely.
+
+2026-03-02 - [HTML Reporting]
+Decision: Implemented `Reporter.ts` to encapsulate HTML report generation, separated from the `PrimalEngine` core.
+Reasoning: Separation of concerns. Writing to the filesystem and generating markup is a distinct responsibility from orchestration and chaos testing.
+Constraint: Ensure the reporting directory is dynamically configurable and falls back gracefully to a default `./reports`.

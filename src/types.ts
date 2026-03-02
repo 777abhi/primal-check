@@ -33,6 +33,11 @@ export interface SmartNavigationConfig {
   steps?: number; // Number of interactions
 }
 
+export interface ReportConfig {
+  enabled: boolean;
+  directory?: string;
+}
+
 export interface SiteConfig {
   name: string;
   url: string;
@@ -42,6 +47,7 @@ export interface SiteConfig {
   storageFuzzingConfig?: StorageFuzzingConfig;
   networkTrafficConfig?: NetworkTrafficConfig;
   smartNavigationConfig?: SmartNavigationConfig;
+  reportConfig?: ReportConfig;
 }
 
 export enum ExecutionMode {
