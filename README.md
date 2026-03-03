@@ -82,8 +82,8 @@ The following features are planned for incremental development to enhance the ca
 ### 3. Reporting
 - **HTML Reports**: Generates a human-readable HTML report summarizing the run, including the URL, mode, timestamp, success status, and any errors recorded. Configured via `reportConfig` (enabled, directory).
 
-### Phase 4: CLI Wrapper
-- **CLI Wrapper**: Allow running Primal Check directly from the command line without writing a test file manually (e.g., `npx primal-check --url https://example.com --mode GORILLA`).
+### 4. CLI Wrapper
+- **Standalone Execution**: Run Primal Check directly from the command line without writing a test file manually (e.g., `npx primal-check --url https://example.com --mode GORILLA`).
 
 ### Phase 5: AI & Intelligent Automation
 - **Exploratory Agent**: Autonomous agent that learns to navigate the site effectively using RL or LLM guidance, prioritizing critical user flows over random clicks.
@@ -97,3 +97,6 @@ The following features are planned for incremental development to enhance the ca
 
 ### Phase 8: AI-Driven Auto-Repair
 - **Self-Healing Locators**: Use LLMs to dynamically suggest and apply new robust locators when UI elements change, reducing the brittleness of test automation.
+
+### Phase 9: API Server Integration
+- **REST API**: Expose PrimalEngine capabilities over a lightweight HTTP server, allowing non-Node.js systems to trigger chaos tests and retrieve results via API calls.

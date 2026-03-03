@@ -54,3 +54,8 @@ Constraint: Between steps, we must wait for network idle to avoid missing dynami
 Decision: Implemented `Reporter.ts` to encapsulate HTML report generation, separated from the `PrimalEngine` core.
 Reasoning: Separation of concerns. Writing to the filesystem and generating markup is a distinct responsibility from orchestration and chaos testing.
 Constraint: Ensure the reporting directory is dynamically configurable and falls back gracefully to a default `./reports`.
+
+2026-03-03 - [CLI Wrapper]
+Decision: Created a CLI wrapper in `src/cli.ts` exposed via `bin` in `package.json`.
+Reasoning: To allow execution of Primal Check as a standalone utility without requiring a user-written test file. This enhances accessibility and CI integration.
+Constraint: The CLI should use process.exit to communicate success (0) or failure (1) cleanly back to the operating system.
