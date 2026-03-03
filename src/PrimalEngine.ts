@@ -1,12 +1,13 @@
 import { Page } from '@playwright/test';
-import { SiteConfig, ExecutionMode, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig, NetworkTrafficConfig, SmartNavigationConfig } from './types';
+import { SiteConfig, ExecutionMode, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig, NetworkTrafficConfig, SmartNavigationConfig, ReportConfig } from './types';
 import { ChaosFuzzer } from './ChaosFuzzer';
 import { StorageFuzzer } from './StorageFuzzer';
 import { NetworkTrafficAnalyzer } from './NetworkTrafficAnalyzer';
+import { Reporter } from './Reporter';
 import * as path from 'path';
 import AxeBuilder from '@axe-core/playwright';
 
-export { SiteConfig, ExecutionMode, ScreenshotConfig, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig, NetworkTrafficConfig, SmartNavigationConfig } from './types';
+export { SiteConfig, ExecutionMode, ScreenshotConfig, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig, NetworkTrafficConfig, SmartNavigationConfig, ReportConfig } from './types';
 
 export class PrimalEngine {
   private page: Page;
@@ -78,6 +79,10 @@ export class PrimalEngine {
         if (shouldCapture) {
           await this.captureScreenshot(config, mode, success);
         }
+      }
+
+      if (config.reportConfig && config.reportConfig.enabled) {
+        Reporter.generate(config, mode, success, errors);
       }
     }
   }

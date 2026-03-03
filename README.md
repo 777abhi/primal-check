@@ -79,8 +79,10 @@ The following features are planned for incremental development to enhance the ca
 - **Visual Regression**: Compare current state against a baseline to detect visual changes.
 - **AI-Powered Analysis**: Analyze screenshots for potential UI issues or anomalies using AI models.
 
-### Phase 4: Reporting & CLI
-- **HTML Reports**: Generate a human-readable report summarizing the run, errors found, and interactions performed.
+### 3. Reporting
+- **HTML Reports**: Generates a human-readable HTML report summarizing the run, including the URL, mode, timestamp, success status, and any errors recorded. Configured via `reportConfig` (enabled, directory).
+
+### Phase 4: CLI Wrapper
 - **CLI Wrapper**: Allow running Primal Check directly from the command line without writing a test file manually (e.g., `npx primal-check --url https://example.com --mode GORILLA`).
 
 ### Phase 5: AI & Intelligent Automation
@@ -92,3 +94,6 @@ The following features are planned for incremental development to enhance the ca
 
 ### Phase 7: Cloud Integration
 - **Distributed Chaos**: Support running multiple Primal Check instances concurrently in cloud environments (e.g., AWS Fargate, GCP Cloud Run) to perform distributed load and chaos testing.
+
+### Phase 8: AI-Driven Auto-Repair
+- **Self-Healing Locators**: Use LLMs to dynamically suggest and apply new robust locators when UI elements change, reducing the brittleness of test automation.
