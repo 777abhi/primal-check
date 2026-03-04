@@ -3,11 +3,14 @@
 import { chromium } from 'playwright';
 import { PrimalEngine } from './PrimalEngine';
 import { ExecutionMode, SiteConfig } from './types';
+import { startServer } from './server';
 
 async function main() {
   const args = process.argv.slice(2);
   let url = '';
   let mode: ExecutionMode = ExecutionMode.READ_ONLY;
+  let serve = false;
+  let port = 3000;
 
   for (let i = 0; i < args.length; i++) {
     if (args[i] === '--url' && i + 1 < args.length) {
@@ -19,11 +22,22 @@ async function main() {
         mode = ExecutionMode.GORILLA;
       }
       i++;
+    } else if (args[i] === '--serve') {
+      serve = true;
+    } else if (args[i] === '--port' && i + 1 < args.length) {
+      port = parseInt(args[i + 1], 10);
+      i++;
     }
+  }
+
+  if (serve) {
+    startServer(port);
+    return; // Keep the process alive for the server
   }
 
   if (!url) {
     console.log('Usage: primal-check --url <url> [--mode <READ_ONLY|GORILLA>]');
+    console.log('       primal-check --serve [--port <port>]');
     process.exit(1);
   }
 

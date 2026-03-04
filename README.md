@@ -85,7 +85,10 @@ The following features are planned for incremental development to enhance the ca
 ### 4. CLI Wrapper
 - **Standalone Execution**: Run Primal Check directly from the command line without writing a test file manually (e.g., `npx primal-check --url https://example.com --mode GORILLA`).
 
-### Phase 5: AI & Intelligent Automation
+### 5. API Server Integration
+- **REST API**: Expose PrimalEngine capabilities over a lightweight HTTP server, allowing non-Node.js systems to trigger chaos tests and retrieve results via API calls. Start the server using the CLI: `npx primal-check --serve --port 3000`. Send a POST request to `/run` with `{ "config": { "name": "Site", "url": "..." }, "mode": "GORILLA" }` to execute tests dynamically.
+
+### Phase 6: AI & Intelligent Automation
 - **Exploratory Agent**: Autonomous agent that learns to navigate the site effectively using RL or LLM guidance, prioritizing critical user flows over random clicks.
 - **Self-Healing Tests**: Using AI to automatically repair selectors or logic when the UI changes, reducing maintenance overhead.
 
@@ -98,5 +101,5 @@ The following features are planned for incremental development to enhance the ca
 ### Phase 8: AI-Driven Auto-Repair
 - **Self-Healing Locators**: Use LLMs to dynamically suggest and apply new robust locators when UI elements change, reducing the brittleness of test automation.
 
-### Phase 9: API Server Integration
-- **REST API**: Expose PrimalEngine capabilities over a lightweight HTTP server, allowing non-Node.js systems to trigger chaos tests and retrieve results via API calls.
+### Phase 10: Webhooks Integration
+- **Webhooks**: Introduce webhooks configuration allowing PrimalEngine to autonomously dispatch test run results and JSON payloads to external CI/CD platforms or messaging services (like Slack/Discord) upon completion.
