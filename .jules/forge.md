@@ -59,3 +59,8 @@ Constraint: Ensure the reporting directory is dynamically configurable and falls
 Decision: Created a CLI wrapper in `src/cli.ts` exposed via `bin` in `package.json`.
 Reasoning: To allow execution of Primal Check as a standalone utility without requiring a user-written test file. This enhances accessibility and CI integration.
 Constraint: The CLI should use process.exit to communicate success (0) or failure (1) cleanly back to the operating system.
+
+2026-03-04 - [API Server Integration]
+Decision: Built a lightweight REST API server using Node's built-in `http` module in `src/server.ts`, exposed via `--serve` in the CLI.
+Reasoning: To enable Primal Check as a standalone microservice, allowing non-Node systems to orchestrate chaos tests via HTTP calls. Using built-in `http` avoids external dependencies (like Express), adhering to the project's lightweight philosophy.
+Constraint: Maintain strict adherence to zero-dependency APIs for core network operations unless absolutely necessary.
