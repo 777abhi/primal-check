@@ -1,13 +1,14 @@
 import { Page } from '@playwright/test';
-import { SiteConfig, ExecutionMode, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig, NetworkTrafficConfig, SmartNavigationConfig, ReportConfig } from './types';
+import { SiteConfig, ExecutionMode, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig, NetworkTrafficConfig, SmartNavigationConfig, ReportConfig, WebhookConfig } from './types';
 import { ChaosFuzzer } from './ChaosFuzzer';
 import { StorageFuzzer } from './StorageFuzzer';
 import { NetworkTrafficAnalyzer } from './NetworkTrafficAnalyzer';
 import { Reporter } from './Reporter';
+import { WebhookDispatcher } from './WebhookDispatcher';
 import * as path from 'path';
 import AxeBuilder from '@axe-core/playwright';
 
-export { SiteConfig, ExecutionMode, ScreenshotConfig, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig, NetworkTrafficConfig, SmartNavigationConfig, ReportConfig } from './types';
+export { SiteConfig, ExecutionMode, ScreenshotConfig, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig, NetworkTrafficConfig, SmartNavigationConfig, ReportConfig, WebhookConfig } from './types';
 
 export class PrimalEngine {
   private page: Page;
@@ -83,6 +84,10 @@ export class PrimalEngine {
 
       if (config.reportConfig && config.reportConfig.enabled) {
         Reporter.generate(config, mode, success, errors);
+      }
+
+      if (config.webhookConfig && config.webhookConfig.enabled) {
+        await WebhookDispatcher.dispatch(config, mode, success, errors);
       }
     }
   }
