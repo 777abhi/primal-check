@@ -64,3 +64,8 @@ Constraint: The CLI should use process.exit to communicate success (0) or failur
 Decision: Built a lightweight REST API server using Node's built-in `http` module in `src/server.ts`, exposed via `--serve` in the CLI.
 Reasoning: To enable Primal Check as a standalone microservice, allowing non-Node systems to orchestrate chaos tests via HTTP calls. Using built-in `http` avoids external dependencies (like Express), adhering to the project's lightweight philosophy.
 Constraint: Maintain strict adherence to zero-dependency APIs for core network operations unless absolutely necessary.
+
+2026-03-05 - [Webhooks Integration]
+Decision: Implemented `WebhookDispatcher` using Node's native `http` and `https` modules to dispatch run results.
+Reasoning: To provide immediate, automated alerting and telemetry to external CI/CD platforms or messaging tools without requiring users to poll the system.
+Constraint: Webhook dispatches must be fail-safe; network errors during dispatch should be caught and logged, not crash the entire PrimalEngine test run.

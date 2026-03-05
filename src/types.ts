@@ -38,6 +38,13 @@ export interface ReportConfig {
   directory?: string;
 }
 
+export interface WebhookConfig {
+  enabled: boolean;
+  url: string;
+  method?: 'POST' | 'PUT';
+  headers?: Record<string, string>;
+}
+
 export interface SiteConfig {
   name: string;
   url: string;
@@ -48,6 +55,7 @@ export interface SiteConfig {
   networkTrafficConfig?: NetworkTrafficConfig;
   smartNavigationConfig?: SmartNavigationConfig;
   reportConfig?: ReportConfig;
+  webhookConfig?: WebhookConfig;
 }
 
 export enum ExecutionMode {

@@ -75,6 +75,9 @@ Designed to test application stability under random interaction.
 
 The following features are planned for incremental development to enhance the capabilities of Primal Check:
 
+### 6. Webhooks Integration
+- **Webhooks**: Automatically dispatch test run results and JSON payloads to external CI/CD platforms or messaging services (like Slack/Discord) upon completion. Configure via `webhookConfig` (enabled, url, method, headers).
+
 ### Phase 3: Visual Verification
 - **Visual Regression**: Compare current state against a baseline to detect visual changes.
 - **AI-Powered Analysis**: Analyze screenshots for potential UI issues or anomalies using AI models.
@@ -101,5 +104,5 @@ The following features are planned for incremental development to enhance the ca
 ### Phase 8: AI-Driven Auto-Repair
 - **Self-Healing Locators**: Use LLMs to dynamically suggest and apply new robust locators when UI elements change, reducing the brittleness of test automation.
 
-### Phase 10: Webhooks Integration
-- **Webhooks**: Introduce webhooks configuration allowing PrimalEngine to autonomously dispatch test run results and JSON payloads to external CI/CD platforms or messaging services (like Slack/Discord) upon completion.
+### Phase 11: Real-time Dashboard
+- **Telemetry & Visualization**: Create a lightweight web dashboard to aggregate webhook payloads and visualize test history, success rates, and performance trends over time.
