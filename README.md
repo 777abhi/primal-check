@@ -78,6 +78,9 @@ The following features are planned for incremental development to enhance the ca
 ### 6. Webhooks Integration
 - **Webhooks**: Automatically dispatch test run results and JSON payloads to external CI/CD platforms or messaging services (like Slack/Discord) upon completion. Configure via `webhookConfig` (enabled, url, method, headers).
 
+### 7. Performance Profiling
+- **Tracing Integration**: Automatically analyze Playwright CDP traces by emitting trace zip files alongside test runs to catch degraded metrics early. Configured via `tracingConfig` (enabled, directory).
+
 ### Phase 3: Visual Verification
 - **Visual Regression**: Compare current state against a baseline to detect visual changes.
 - **AI-Powered Analysis**: Analyze screenshots for potential UI issues or anomalies using AI models.
@@ -95,9 +98,6 @@ The following features are planned for incremental development to enhance the ca
 - **Exploratory Agent**: Autonomous agent that learns to navigate the site effectively using RL or LLM guidance, prioritizing critical user flows over random clicks.
 - **Self-Healing Tests**: Using AI to automatically repair selectors or logic when the UI changes, reducing maintenance overhead.
 
-### Phase 6: Performance Profiling
-- **Tracing & Web Vitals Integration**: Analyze CDP traces automatically, emitting performance scores (LCP, CLS, FID) alongside test runs to catch degraded metrics early.
-
 ### Phase 7: Cloud Integration
 - **Distributed Chaos**: Support running multiple Primal Check instances concurrently in cloud environments (e.g., AWS Fargate, GCP Cloud Run) to perform distributed load and chaos testing.
 
@@ -106,3 +106,6 @@ The following features are planned for incremental development to enhance the ca
 
 ### Phase 11: Real-time Dashboard
 - **Telemetry & Visualization**: Create a lightweight web dashboard to aggregate webhook payloads and visualize test history, success rates, and performance trends over time.
+
+### Phase 12: Distributed Load Generation
+- **Serverless Swarm**: Automatically provision and coordinate thousands of ephemeral Playwright instances across serverless providers (AWS Lambda, Google Cloud Run) to perform massive-scale, synchronized load and chaos testing from multiple global regions.
