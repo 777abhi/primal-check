@@ -1,5 +1,5 @@
 import { Page } from '@playwright/test';
-import { SiteConfig, ExecutionMode, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig, NetworkTrafficConfig, SmartNavigationConfig, ReportConfig, WebhookConfig } from './types';
+import { SiteConfig, ExecutionMode, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig, NetworkTrafficConfig, SmartNavigationConfig, ReportConfig, WebhookConfig, TracingConfig } from './types';
 import { ChaosFuzzer } from './ChaosFuzzer';
 import { StorageFuzzer } from './StorageFuzzer';
 import { NetworkTrafficAnalyzer } from './NetworkTrafficAnalyzer';
@@ -8,7 +8,7 @@ import { WebhookDispatcher } from './WebhookDispatcher';
 import * as path from 'path';
 import AxeBuilder from '@axe-core/playwright';
 
-export { SiteConfig, ExecutionMode, ScreenshotConfig, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig, NetworkTrafficConfig, SmartNavigationConfig, ReportConfig, WebhookConfig } from './types';
+export { SiteConfig, ExecutionMode, ScreenshotConfig, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig, NetworkTrafficConfig, SmartNavigationConfig, ReportConfig, WebhookConfig, TracingConfig } from './types';
 
 export class PrimalEngine {
   private page: Page;
@@ -39,6 +39,10 @@ export class PrimalEngine {
 
       if (mode === ExecutionMode.GORILLA && config.networkChaosConfig?.enabled) {
         await this.applyNetworkChaos(config.networkChaosConfig);
+      }
+
+      if (config.tracingConfig?.enabled) {
+        await this.page.context().tracing.start({ screenshots: true, snapshots: true });
       }
 
       // Navigation
@@ -84,6 +88,20 @@ export class PrimalEngine {
 
       if (config.reportConfig && config.reportConfig.enabled) {
         Reporter.generate(config, mode, success, errors);
+      }
+
+      if (config.tracingConfig?.enabled) {
+        const dir = config.tracingConfig.directory || './traces';
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+        const sanitizedName = config.name.replace(/[^a-z0-9]/gi, '_');
+        const filename = `${sanitizedName}-trace-${timestamp}.zip`;
+        const fullPath = path.join(dir, filename);
+
+        try {
+          await this.page.context().tracing.stop({ path: fullPath });
+        } catch (e) {
+          console.warn(`Failed to stop tracing:`, e);
+        }
       }
 
       if (config.webhookConfig && config.webhookConfig.enabled) {

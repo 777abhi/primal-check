@@ -69,3 +69,8 @@ Constraint: Maintain strict adherence to zero-dependency APIs for core network o
 Decision: Implemented `WebhookDispatcher` using Node's native `http` and `https` modules to dispatch run results.
 Reasoning: To provide immediate, automated alerting and telemetry to external CI/CD platforms or messaging tools without requiring users to poll the system.
 Constraint: Webhook dispatches must be fail-safe; network errors during dispatch should be caught and logged, not crash the entire PrimalEngine test run.
+
+2026-03-06 - [Performance Profiling: Tracing Integration]
+Decision: Implemented `TracingConfig` in `PrimalEngine` using Playwright's native `page.context().tracing` APIs.
+Reasoning: Collecting Playwright CDP traces (DOM snapshots, network activity, screenshots) is a foundational necessity for debugging test failures and understanding application performance bottlenecks without manually instrumenting the page.
+Constraint: The context tracing start/stop operations must be safely enclosed in try/catch to avoid halting the execution flow if stopping the trace file fails due to filesystem permissions or unexpected closure.

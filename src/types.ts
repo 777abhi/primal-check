@@ -45,6 +45,11 @@ export interface WebhookConfig {
   headers?: Record<string, string>;
 }
 
+export interface TracingConfig {
+  enabled: boolean;
+  directory?: string;
+}
+
 export interface SiteConfig {
   name: string;
   url: string;
@@ -56,6 +61,7 @@ export interface SiteConfig {
   smartNavigationConfig?: SmartNavigationConfig;
   reportConfig?: ReportConfig;
   webhookConfig?: WebhookConfig;
+  tracingConfig?: TracingConfig;
 }
 
 export enum ExecutionMode {

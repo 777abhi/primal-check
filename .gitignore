@@ -3,3 +3,6 @@ dist/
 test-results/
 playwright-report/
 .env
+demo-reports/
+demo-screenshots/
+test-traces/
