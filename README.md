@@ -70,6 +70,7 @@ Designed to test application stability under random interaction.
 
 ### Visual Verification
 - **Screenshot Capture**: Automatically capture screenshots on failure or success based on configuration. Screenshots are saved with timestamps and status indicators.
+- **Visual Regression**: Compares current page state against a baseline image, logging a diff and optionally failing the run if visual changes exceed a defined threshold. Powered by `pixelmatch` and `pngjs`. Configured via `visualRegressionConfig`.
 
 ## Development Roadmap
 
@@ -80,10 +81,6 @@ The following features are planned for incremental development to enhance the ca
 
 ### 7. Performance Profiling
 - **Tracing Integration**: Automatically analyze Playwright CDP traces by emitting trace zip files alongside test runs to catch degraded metrics early. Configured via `tracingConfig` (enabled, directory).
-
-### Phase 3: Visual Verification
-- **Visual Regression**: Compare current state against a baseline to detect visual changes.
-- **AI-Powered Analysis**: Analyze screenshots for potential UI issues or anomalies using AI models.
 
 ### 3. Reporting
 - **HTML Reports**: Generates a human-readable HTML report summarizing the run, including the URL, mode, timestamp, success status, and any errors recorded. Configured via `reportConfig` (enabled, directory).
@@ -98,6 +95,9 @@ The following features are planned for incremental development to enhance the ca
 - **Exploratory Agent**: Autonomous agent that learns to navigate the site effectively using RL or LLM guidance, prioritizing critical user flows over random clicks.
 - **Self-Healing Tests**: Using AI to automatically repair selectors or logic when the UI changes, reducing maintenance overhead.
 
+### Phase 3: Visual Verification
+- **AI-Powered Analysis**: Analyze screenshots for potential UI issues or anomalies using AI models.
+
 ### Phase 7: Cloud Integration
 - **Distributed Chaos**: Support running multiple Primal Check instances concurrently in cloud environments (e.g., AWS Fargate, GCP Cloud Run) to perform distributed load and chaos testing.
 
@@ -109,3 +109,6 @@ The following features are planned for incremental development to enhance the ca
 
 ### Phase 12: Distributed Load Generation
 - **Serverless Swarm**: Automatically provision and coordinate thousands of ephemeral Playwright instances across serverless providers (AWS Lambda, Google Cloud Run) to perform massive-scale, synchronized load and chaos testing from multiple global regions.
+
+### Phase 13: Auto-Generated Chaos Plugins
+- **Dynamic Extensibility**: Dynamically download, verify, and execute community-driven chaos testing modules at runtime, allowing users to extend the GORILLA mode interactively without updating the core package.

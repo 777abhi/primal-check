@@ -74,3 +74,8 @@ Constraint: Webhook dispatches must be fail-safe; network errors during dispatch
 Decision: Implemented `TracingConfig` in `PrimalEngine` using Playwright's native `page.context().tracing` APIs.
 Reasoning: Collecting Playwright CDP traces (DOM snapshots, network activity, screenshots) is a foundational necessity for debugging test failures and understanding application performance bottlenecks without manually instrumenting the page.
 Constraint: The context tracing start/stop operations must be safely enclosed in try/catch to avoid halting the execution flow if stopping the trace file fails due to filesystem permissions or unexpected closure.
+
+2026-03-07 - [Visual Regression Analyzer]
+Decision: Built `VisualRegressionAnalyzer` utilizing `pixelmatch` and `pngjs` to compare screenshots.
+Reasoning: To provide developers with an automated way to detect unintended visual changes directly within the Primal Check execution suite.
+Constraint: Dependencies `pixelmatch` and `pngjs` added. Image resizing implemented to handle differing viewport dimensions safely.

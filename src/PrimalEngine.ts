@@ -1,14 +1,15 @@
 import { Page } from '@playwright/test';
-import { SiteConfig, ExecutionMode, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig, NetworkTrafficConfig, SmartNavigationConfig, ReportConfig, WebhookConfig, TracingConfig } from './types';
+import { SiteConfig, ExecutionMode, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig, NetworkTrafficConfig, SmartNavigationConfig, ReportConfig, WebhookConfig, TracingConfig, VisualRegressionConfig } from './types';
 import { ChaosFuzzer } from './ChaosFuzzer';
 import { StorageFuzzer } from './StorageFuzzer';
 import { NetworkTrafficAnalyzer } from './NetworkTrafficAnalyzer';
 import { Reporter } from './Reporter';
 import { WebhookDispatcher } from './WebhookDispatcher';
+import { VisualRegressionAnalyzer } from './VisualRegressionAnalyzer';
 import * as path from 'path';
 import AxeBuilder from '@axe-core/playwright';
 
-export { SiteConfig, ExecutionMode, ScreenshotConfig, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig, NetworkTrafficConfig, SmartNavigationConfig, ReportConfig, WebhookConfig, TracingConfig } from './types';
+export { SiteConfig, ExecutionMode, ScreenshotConfig, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig, NetworkTrafficConfig, SmartNavigationConfig, ReportConfig, WebhookConfig, TracingConfig, VisualRegressionConfig } from './types';
 
 export class PrimalEngine {
   private page: Page;
@@ -66,6 +67,11 @@ export class PrimalEngine {
 
       if (analyzer) {
         analyzer.throwIfIssues();
+      }
+
+      if (config.visualRegressionConfig?.enabled) {
+        const visualAnalyzer = new VisualRegressionAnalyzer(this.page, config.visualRegressionConfig, config.name);
+        await visualAnalyzer.analyze();
       }
 
       success = true;
