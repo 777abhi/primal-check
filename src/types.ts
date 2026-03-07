@@ -50,6 +50,14 @@ export interface TracingConfig {
   directory?: string;
 }
 
+export interface VisualRegressionConfig {
+  enabled: boolean;
+  baselineDirectory?: string;
+  diffDirectory?: string;
+  failOnMismatch?: boolean;
+  threshold?: number;
+}
+
 export interface SiteConfig {
   name: string;
   url: string;
@@ -62,6 +70,7 @@ export interface SiteConfig {
   reportConfig?: ReportConfig;
   webhookConfig?: WebhookConfig;
   tracingConfig?: TracingConfig;
+  visualRegressionConfig?: VisualRegressionConfig;
 }
 
 export enum ExecutionMode {

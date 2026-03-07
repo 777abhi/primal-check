@@ -31,12 +31,16 @@
   "homepage": "https://github.com/777abhi/primal-check#readme",
   "devDependencies": {
     "@playwright/test": "^1.58.2",
+    "@types/pixelmatch": "^5.2.6",
+    "@types/pngjs": "^6.0.5",
     "playwright": "^1.58.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   },
   "dependencies": {
     "@axe-core/playwright": "^4.11.1",
-    "axe-core": "^4.11.1"
+    "axe-core": "^4.11.1",
+    "pixelmatch": "^7.1.0",
+    "pngjs": "^7.0.0"
   }
 }
