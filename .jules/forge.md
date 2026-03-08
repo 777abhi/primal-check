@@ -79,3 +79,8 @@ Constraint: The context tracing start/stop operations must be safely enclosed in
 Decision: Built `VisualRegressionAnalyzer` utilizing `pixelmatch` and `pngjs` to compare screenshots.
 Reasoning: To provide developers with an automated way to detect unintended visual changes directly within the Primal Check execution suite.
 Constraint: Dependencies `pixelmatch` and `pngjs` added. Image resizing implemented to handle differing viewport dimensions safely.
+
+2026-03-08 - [Plugin System Integration]
+Decision: Implemented a Plugin System in `PrimalEngine`, allowing dynamic execution of custom chaos strategies via `config.plugins`.
+Reasoning: The core engine cannot anticipate every possible chaos testing need. Decoupling chaos strategies into plugins adheres to the Open/Closed Principle, allowing future extensibility without modifying the core logic.
+Constraint: Plugins are only executed in `GORILLA` mode and errors thrown within a plugin are safely caught and logged to prevent halting the entire orchestration flow.

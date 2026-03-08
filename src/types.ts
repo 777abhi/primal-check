@@ -1,3 +1,10 @@
+import { Page } from '@playwright/test';
+
+export interface PrimalPlugin {
+  name: string;
+  run(page: Page): Promise<void>;
+}
+
 export interface ScreenshotConfig {
   enabled: boolean;
   directory?: string;
@@ -71,6 +78,7 @@ export interface SiteConfig {
   webhookConfig?: WebhookConfig;
   tracingConfig?: TracingConfig;
   visualRegressionConfig?: VisualRegressionConfig;
+  plugins?: PrimalPlugin[];
 }
 
 export enum ExecutionMode {
