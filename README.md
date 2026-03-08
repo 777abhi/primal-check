@@ -66,7 +66,15 @@ Designed to test application stability under random interaction.
 - **Network Chaos**: Simulates network instability (offline mode, latency, request failures) to test resilience against connectivity issues.
 - **Cookie & LocalStorage Fuzzing**: Randomly clear or mutate cookies and local storage to test state persistence and session handling.
 - **Smart Navigation**: Performs a configurable series of interactions ("walk") by identifying and interacting with random visible elements instead of a single interaction.
+- **Plugin System**: Dynamically load and execute custom `PrimalPlugin` objects directly into the GORILLA mode engine without altering the core library.
 - **Resilience**: Warns rather than failing if no interactive elements are found.
+
+### Integrations and Analytics
+- **Webhooks**: Automatically dispatch test run results and JSON payloads to external CI/CD platforms or messaging services. Configured via `webhookConfig`.
+- **Tracing Integration**: Emits Playwright CDP trace zip files alongside test runs to catch degraded metrics early. Configured via `tracingConfig`.
+- **HTML Reports**: Generates a human-readable HTML report summarizing the run. Configured via `reportConfig`.
+- **CLI Wrapper**: Run Primal Check directly from the command line (e.g., `npx primal-check --url https://example.com --mode GORILLA`).
+- **API Server Integration**: Expose PrimalEngine capabilities over a lightweight REST API via `npx primal-check --serve --port 3000`. Send a POST to `/run` to execute tests dynamically.
 
 ### Visual Verification
 - **Screenshot Capture**: Automatically capture screenshots on failure or success based on configuration. Screenshots are saved with timestamps and status indicators.
@@ -75,21 +83,6 @@ Designed to test application stability under random interaction.
 ## Development Roadmap
 
 The following features are planned for incremental development to enhance the capabilities of Primal Check:
-
-### 6. Webhooks Integration
-- **Webhooks**: Automatically dispatch test run results and JSON payloads to external CI/CD platforms or messaging services (like Slack/Discord) upon completion. Configure via `webhookConfig` (enabled, url, method, headers).
-
-### 7. Performance Profiling
-- **Tracing Integration**: Automatically analyze Playwright CDP traces by emitting trace zip files alongside test runs to catch degraded metrics early. Configured via `tracingConfig` (enabled, directory).
-
-### 3. Reporting
-- **HTML Reports**: Generates a human-readable HTML report summarizing the run, including the URL, mode, timestamp, success status, and any errors recorded. Configured via `reportConfig` (enabled, directory).
-
-### 4. CLI Wrapper
-- **Standalone Execution**: Run Primal Check directly from the command line without writing a test file manually (e.g., `npx primal-check --url https://example.com --mode GORILLA`).
-
-### 5. API Server Integration
-- **REST API**: Expose PrimalEngine capabilities over a lightweight HTTP server, allowing non-Node.js systems to trigger chaos tests and retrieve results via API calls. Start the server using the CLI: `npx primal-check --serve --port 3000`. Send a POST request to `/run` with `{ "config": { "name": "Site", "url": "..." }, "mode": "GORILLA" }` to execute tests dynamically.
 
 ### Phase 6: AI & Intelligent Automation
 - **Exploratory Agent**: Autonomous agent that learns to navigate the site effectively using RL or LLM guidance, prioritizing critical user flows over random clicks.
@@ -112,3 +105,6 @@ The following features are planned for incremental development to enhance the ca
 
 ### Phase 13: Auto-Generated Chaos Plugins
 - **Dynamic Extensibility**: Dynamically download, verify, and execute community-driven chaos testing modules at runtime, allowing users to extend the GORILLA mode interactively without updating the core package.
+
+### Phase 14: Cross-Browser Chaos Matrix
+- **Simultaneous Chaos Runs**: Automatically orchestrate concurrent chaos executions across Chromium, WebKit, and Firefox within a single Primal Check run to expose browser-specific runtime flaws.

@@ -223,6 +223,16 @@ export class PrimalEngine {
 
     const steps = config.smartNavigationConfig?.enabled ? (config.smartNavigationConfig.steps || 1) : 1;
     await this.performRandomInteractions(steps);
+
+    if (config.plugins && config.plugins.length > 0) {
+      for (const plugin of config.plugins) {
+        try {
+          await plugin.run(this.page);
+        } catch (e) {
+          console.warn(`Plugin ${plugin.name} failed:`, e);
+        }
+      }
+    }
   }
 
   private async performRandomInteractions(steps: number): Promise<void> {
