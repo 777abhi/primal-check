@@ -84,3 +84,8 @@ Constraint: Dependencies `pixelmatch` and `pngjs` added. Image resizing implemen
 Decision: Implemented a Plugin System in `PrimalEngine`, allowing dynamic execution of custom chaos strategies via `config.plugins`.
 Reasoning: The core engine cannot anticipate every possible chaos testing need. Decoupling chaos strategies into plugins adheres to the Open/Closed Principle, allowing future extensibility without modifying the core logic.
 Constraint: Plugins are only executed in `GORILLA` mode and errors thrown within a plugin are safely caught and logged to prevent halting the entire orchestration flow.
+
+2026-03-09 - [Cross-Browser Chaos Matrix]
+Decision: Implemented `MatrixOrchestrator` to orchestrate execution across Chromium, Firefox, and WebKit simultaneously via `Promise.all`. Added a `--matrix` flag to CLI and a `matrix` boolean to the API server payload.
+Reasoning: Validating application stability across different rendering engines is critical. By handling concurrency outside of `PrimalEngine`, we ensure the engine itself remains focused on a single `Page` execution context while achieving cross-browser chaos orchestration.
+Constraint: Ensure all browser instances spawned in the matrix are properly closed in the `finally` block to prevent lingering detached browser processes, even if an individual engine run fails.
