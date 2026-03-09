@@ -67,6 +67,7 @@ Designed to test application stability under random interaction.
 - **Cookie & LocalStorage Fuzzing**: Randomly clear or mutate cookies and local storage to test state persistence and session handling.
 - **Smart Navigation**: Performs a configurable series of interactions ("walk") by identifying and interacting with random visible elements instead of a single interaction.
 - **Plugin System**: Dynamically load and execute custom `PrimalPlugin` objects directly into the GORILLA mode engine without altering the core library.
+- **Cross-Browser Chaos Matrix**: Run configurations concurrently across Chromium, WebKit, and Firefox using the `--matrix` CLI flag or `matrix: true` via API.
 - **Resilience**: Warns rather than failing if no interactive elements are found.
 
 ### Integrations and Analytics
@@ -106,5 +107,5 @@ The following features are planned for incremental development to enhance the ca
 ### Phase 13: Auto-Generated Chaos Plugins
 - **Dynamic Extensibility**: Dynamically download, verify, and execute community-driven chaos testing modules at runtime, allowing users to extend the GORILLA mode interactively without updating the core package.
 
-### Phase 14: Cross-Browser Chaos Matrix
-- **Simultaneous Chaos Runs**: Automatically orchestrate concurrent chaos executions across Chromium, WebKit, and Firefox within a single Primal Check run to expose browser-specific runtime flaws.
+### Phase 15: Heuristic-based State Fuzzing
+- **Smart Mutation**: Leverage intelligent heuristics to mutate application state in complex ways (e.g. changing numeric IDs to negative numbers, strings to massive blobs) dynamically without predefined payload boundaries.

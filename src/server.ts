@@ -1,6 +1,7 @@
 import * as http from 'http';
 import { chromium } from 'playwright';
 import { PrimalEngine } from './PrimalEngine';
+import { MatrixOrchestrator } from './MatrixOrchestrator';
 import { SiteConfig, ExecutionMode } from './types';
 
 export function startServer(port: number = 3000): http.Server {
@@ -21,21 +22,35 @@ export function startServer(port: number = 3000): http.Server {
                 try {
                     const config: SiteConfig = payload.config;
                     const mode: ExecutionMode = payload.mode || ExecutionMode.READ_ONLY;
+                    const matrix: boolean = payload.matrix || false;
 
-                    const browser = await chromium.launch({ headless: true });
-                    const context = await browser.newContext();
-                    const page = await context.newPage();
-                    const engine = new PrimalEngine(page);
+                    if (matrix) {
+                        const results = await MatrixOrchestrator.run(config, mode);
+                        const allSuccess = results.every(r => r.success);
 
-                    try {
-                        await engine.run(config, mode);
-                        res.writeHead(200, { 'Content-Type': 'application/json' });
-                        res.end(JSON.stringify({ success: true }));
-                    } catch (err: any) {
-                        res.writeHead(500, { 'Content-Type': 'application/json' });
-                        res.end(JSON.stringify({ success: false, error: err.message }));
-                    } finally {
-                        await browser.close();
+                        if (allSuccess) {
+                            res.writeHead(200, { 'Content-Type': 'application/json' });
+                            res.end(JSON.stringify({ success: true, results }));
+                        } else {
+                            res.writeHead(500, { 'Content-Type': 'application/json' });
+                            res.end(JSON.stringify({ success: false, results }));
+                        }
+                    } else {
+                        const browser = await chromium.launch({ headless: true });
+                        const context = await browser.newContext();
+                        const page = await context.newPage();
+                        const engine = new PrimalEngine(page);
+
+                        try {
+                            await engine.run(config, mode);
+                            res.writeHead(200, { 'Content-Type': 'application/json' });
+                            res.end(JSON.stringify({ success: true }));
+                        } catch (err: any) {
+                            res.writeHead(500, { 'Content-Type': 'application/json' });
+                            res.end(JSON.stringify({ success: false, error: err.message }));
+                        } finally {
+                            await browser.close();
+                        }
                     }
                 } catch (err: any) {
                     res.writeHead(500, { 'Content-Type': 'application/json' });
