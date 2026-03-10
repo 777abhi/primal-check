@@ -64,7 +64,7 @@ Designed to test application stability under random interaction.
 - **Scroll & Explore**: Automatically scrolls to the bottom of the page to trigger lazy-loading and reveal hidden elements before interaction.
 - **Form Fuzzing**: Automatically detects visible form fields (`input`, `textarea`, `select`) and injects random data.
 - **Network Chaos**: Simulates network instability (offline mode, latency, request failures) to test resilience against connectivity issues.
-- **Cookie & LocalStorage Fuzzing**: Randomly clear or mutate cookies and local storage to test state persistence and session handling.
+- **Cookie & LocalStorage Fuzzing**: Randomly clear or use heuristic-based mutations (SQLi, XSS, overflow) on cookies and local storage to test state persistence and session handling.
 - **Smart Navigation**: Performs a configurable series of interactions ("walk") by identifying and interacting with random visible elements instead of a single interaction.
 - **Plugin System**: Dynamically load and execute custom `PrimalPlugin` objects directly into the GORILLA mode engine without altering the core library.
 - **Cross-Browser Chaos Matrix**: Run configurations concurrently across Chromium, WebKit, and Firefox using the `--matrix` CLI flag or `matrix: true` via API.
@@ -107,5 +107,5 @@ The following features are planned for incremental development to enhance the ca
 ### Phase 13: Auto-Generated Chaos Plugins
 - **Dynamic Extensibility**: Dynamically download, verify, and execute community-driven chaos testing modules at runtime, allowing users to extend the GORILLA mode interactively without updating the core package.
 
-### Phase 15: Heuristic-based State Fuzzing
-- **Smart Mutation**: Leverage intelligent heuristics to mutate application state in complex ways (e.g. changing numeric IDs to negative numbers, strings to massive blobs) dynamically without predefined payload boundaries.
+### Phase 16: Intelligent Exploit Generation
+- **Automated Exploit chaining**: Beyond heuristics, use a local LLM to string together discovered vulnerabilities (e.g., finding an XSS via HeuristicFuzzer and attempting to weaponize it to steal the session token).

@@ -89,3 +89,8 @@ Constraint: Plugins are only executed in `GORILLA` mode and errors thrown within
 Decision: Implemented `MatrixOrchestrator` to orchestrate execution across Chromium, Firefox, and WebKit simultaneously via `Promise.all`. Added a `--matrix` flag to CLI and a `matrix` boolean to the API server payload.
 Reasoning: Validating application stability across different rendering engines is critical. By handling concurrency outside of `PrimalEngine`, we ensure the engine itself remains focused on a single `Page` execution context while achieving cross-browser chaos orchestration.
 Constraint: Ensure all browser instances spawned in the matrix are properly closed in the `finally` block to prevent lingering detached browser processes, even if an individual engine run fails.
+
+2026-03-10 - [Heuristic-based State Fuzzing]
+Decision: Introduced `HeuristicFuzzer` and replaced simple random string generation in `ChaosFuzzer` and `StorageFuzzer` with heuristic-based mutations.
+Reasoning: Simple random strings do not adequately stress-test boundary conditions or uncover security vulnerabilities (e.g., SQLi, XSS, numerical overflows) during chaos testing.
+Constraint: Ensure all string and number fuzzing operations defer to `HeuristicFuzzer` to maintain consistency across the codebase.
