@@ -1,4 +1,5 @@
 import { Page, BrowserContext } from '@playwright/test';
+import { HeuristicFuzzer } from './HeuristicFuzzer';
 
 export class StorageFuzzer {
   static async fuzz(page: Page): Promise<void> {
@@ -20,7 +21,7 @@ export class StorageFuzzer {
         await context.clearCookies({ name: cookie.name, domain: cookie.domain, path: cookie.path });
       } else {
         // Mutate cookie
-        const newValue = cookie.value + '_fuzzed_' + Math.random().toString(36).substring(7);
+        const newValue = HeuristicFuzzer.mutateString(cookie.value);
         // We need to re-add it with new value.
         // `addCookies` overwrites if match.
         // We construct a strictly typed object to avoid TS errors with extra properties if any.
@@ -54,7 +55,7 @@ export class StorageFuzzer {
             // Mutate item
             const originalValue = localStorage.getItem(key);
             if (originalValue !== null) {
-              const newValue = originalValue + '_fuzzed_' + Math.random().toString(36).substring(7);
+              const newValue = HeuristicFuzzer.mutateString(originalValue);
               localStorage.setItem(key, newValue);
             }
           }

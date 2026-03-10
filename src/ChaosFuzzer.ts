@@ -1,4 +1,5 @@
 import { Locator } from '@playwright/test';
+import { HeuristicFuzzer } from './HeuristicFuzzer';
 
 export class ChaosFuzzer {
   static async fuzzInput(input: Locator): Promise<void> {
@@ -10,7 +11,7 @@ export class ChaosFuzzer {
       if (tagName === 'select') {
         await this.fuzzSelect(input);
       } else if (tagName === 'textarea') {
-        await input.fill('Random Text ' + Math.random().toString(36).substring(7));
+        await input.fill(HeuristicFuzzer.mutateString('Random Text'));
       } else if (tagName === 'input') {
         await this.fuzzInputElement(input, type);
       }
@@ -35,13 +36,13 @@ export class ChaosFuzzer {
         await input.check();
       }
     } else if (['text', 'search', 'tel', 'password'].includes(type)) {
-      await input.fill('RandomString ' + Math.random().toString(36).substring(7));
+      await input.fill(HeuristicFuzzer.mutateString('RandomString'));
     } else if (type === 'url') {
-      await input.fill('https://example.com/' + Math.random().toString(36).substring(7));
+      await input.fill(HeuristicFuzzer.mutateString('https://example.com/'));
     } else if (type === 'email') {
-      await input.fill(`test${Math.floor(Math.random() * 1000)}@example.com`);
+      await input.fill(HeuristicFuzzer.mutateString('test@example.com'));
     } else if (type === 'number') {
-      await input.fill(Math.floor(Math.random() * 100).toString());
+      await input.fill(HeuristicFuzzer.mutateNumber());
     } else if (['date', 'datetime-local'].includes(type)) {
       await input.fill('2024-01-01');
     }
