@@ -65,6 +65,10 @@ export interface VisualRegressionConfig {
   threshold?: number;
 }
 
+export interface ViewportChaosConfig {
+  enabled: boolean;
+}
+
 export interface SiteConfig {
   name: string;
   url: string;
@@ -78,6 +82,7 @@ export interface SiteConfig {
   webhookConfig?: WebhookConfig;
   tracingConfig?: TracingConfig;
   visualRegressionConfig?: VisualRegressionConfig;
+  viewportChaosConfig?: ViewportChaosConfig;
   plugins?: PrimalPlugin[];
 }
 
