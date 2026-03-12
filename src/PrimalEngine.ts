@@ -1,5 +1,5 @@
 import { Page } from '@playwright/test';
-import { SiteConfig, ExecutionMode, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig, NetworkTrafficConfig, SmartNavigationConfig, ReportConfig, WebhookConfig, TracingConfig, VisualRegressionConfig, ViewportChaosConfig } from './types';
+import { SiteConfig, ExecutionMode, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig, NetworkTrafficConfig, SmartNavigationConfig, ReportConfig, WebhookConfig, TracingConfig, VisualRegressionConfig, ViewportChaosConfig, DeviceSwarmConfig } from './types';
 import { ChaosFuzzer } from './ChaosFuzzer';
 import { StorageFuzzer } from './StorageFuzzer';
 import { ViewportFuzzer } from './ViewportFuzzer';
@@ -10,7 +10,7 @@ import { VisualRegressionAnalyzer } from './VisualRegressionAnalyzer';
 import * as path from 'path';
 import AxeBuilder from '@axe-core/playwright';
 
-export { SiteConfig, ExecutionMode, ScreenshotConfig, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig, NetworkTrafficConfig, SmartNavigationConfig, ReportConfig, WebhookConfig, TracingConfig, VisualRegressionConfig, ViewportChaosConfig } from './types';
+export { SiteConfig, ExecutionMode, ScreenshotConfig, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig, NetworkTrafficConfig, SmartNavigationConfig, ReportConfig, WebhookConfig, TracingConfig, VisualRegressionConfig, ViewportChaosConfig, DeviceSwarmConfig } from './types';
 
 export class PrimalEngine {
   private page: Page;

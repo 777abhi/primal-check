@@ -69,6 +69,13 @@ export interface ViewportChaosConfig {
   enabled: boolean;
 }
 
+export interface DeviceSwarmConfig {
+  enabled: boolean;
+  devices: string[];
+  fuzzGeolocation?: boolean;
+  fuzzPermissions?: boolean;
+}
+
 export interface SiteConfig {
   name: string;
   url: string;
@@ -83,6 +90,7 @@ export interface SiteConfig {
   tracingConfig?: TracingConfig;
   visualRegressionConfig?: VisualRegressionConfig;
   viewportChaosConfig?: ViewportChaosConfig;
+  deviceSwarmConfig?: DeviceSwarmConfig;
   plugins?: PrimalPlugin[];
 }
 

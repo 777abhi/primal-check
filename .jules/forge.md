@@ -99,3 +99,8 @@ Constraint: Ensure all string and number fuzzing operations defer to `HeuristicF
 Decision: Implemented `ViewportFuzzer` and integrated `viewportChaosConfig` into `GORILLA` mode.
 Reasoning: Modern web applications are highly responsive, and bugs frequently hide behind specific CSS breakpoints. Randomizing the viewport during chaos testing uncovers these hidden elements and layout shifts.
 Constraint: Viewport fuzzing must occur early in the GORILLA run (before interaction logic like Smart Navigation) to ensure the DOM layout is settled before interaction attempts.
+
+2026-03-12 - [Multi-Device Swarm Orchestration]
+Decision: Implemented SwarmOrchestrator to launch Playwright contexts using mobile device descriptors, alongside geolocation and permission fuzzing, orchestrated via DeviceSwarmConfig.
+Reasoning: Mobile usage comprises a massive proportion of web traffic, and many bugs are tied to mobile-specific capabilities like varying geolocation inputs or missing sensor permissions.
+Constraint: Browser contexts created in the swarm must be rigorously closed in the finally block to prevent zombie contexts consuming memory.

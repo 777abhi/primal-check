@@ -69,6 +69,7 @@ Designed to test application stability under random interaction.
 - **Smart Navigation**: Performs a configurable series of interactions ("walk") by identifying and interacting with random visible elements instead of a single interaction.
 - **Plugin System**: Dynamically load and execute custom `PrimalPlugin` objects directly into the GORILLA mode engine without altering the core library.
 - **Cross-Browser Chaos Matrix**: Run configurations concurrently across Chromium, WebKit, and Firefox using the `--matrix` CLI flag or `matrix: true` via API.
+- **Multi-Device Swarm**: Orchestrate concurrent chaos tests across multiple emulated Playwright device profiles (e.g., 'iPhone 12', 'Pixel 5') with randomized geolocation and permissions fuzzing. Configured via `deviceSwarmConfig`.
 - **Resilience**: Warns rather than failing if no interactive elements are found.
 
 ### Integrations and Analytics
@@ -111,5 +112,5 @@ The following features are planned for incremental development to enhance the ca
 ### Phase 16: Intelligent Exploit Generation
 - **Automated Exploit chaining**: Beyond heuristics, use a local LLM to string together discovered vulnerabilities (e.g., finding an XSS via HeuristicFuzzer and attempting to weaponize it to steal the session token).
 
-### Phase 17: Multi-Device Swarm
-- **Device Emulation Matrices**: Orchestrate concurrent chaos tests using Playwright's device profiles (Mobile Safari, Android Chrome) paired with randomized geolocation and permission fuzzing.
+### Phase 18: Adaptive Fuzzing
+- **Feedback-Driven State Mutations**: Continuously learn from application responses (e.g., 500 errors) to prioritize specific input generation paths during chaos tests, evolving from blind heuristics to intelligent payloads.
