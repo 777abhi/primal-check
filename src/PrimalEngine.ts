@@ -1,7 +1,8 @@
 import { Page } from '@playwright/test';
-import { SiteConfig, ExecutionMode, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig, NetworkTrafficConfig, SmartNavigationConfig, ReportConfig, WebhookConfig, TracingConfig, VisualRegressionConfig } from './types';
+import { SiteConfig, ExecutionMode, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig, NetworkTrafficConfig, SmartNavigationConfig, ReportConfig, WebhookConfig, TracingConfig, VisualRegressionConfig, ViewportChaosConfig } from './types';
 import { ChaosFuzzer } from './ChaosFuzzer';
 import { StorageFuzzer } from './StorageFuzzer';
+import { ViewportFuzzer } from './ViewportFuzzer';
 import { NetworkTrafficAnalyzer } from './NetworkTrafficAnalyzer';
 import { Reporter } from './Reporter';
 import { WebhookDispatcher } from './WebhookDispatcher';
@@ -9,7 +10,7 @@ import { VisualRegressionAnalyzer } from './VisualRegressionAnalyzer';
 import * as path from 'path';
 import AxeBuilder from '@axe-core/playwright';
 
-export { SiteConfig, ExecutionMode, ScreenshotConfig, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig, NetworkTrafficConfig, SmartNavigationConfig, ReportConfig, WebhookConfig, TracingConfig, VisualRegressionConfig } from './types';
+export { SiteConfig, ExecutionMode, ScreenshotConfig, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig, NetworkTrafficConfig, SmartNavigationConfig, ReportConfig, WebhookConfig, TracingConfig, VisualRegressionConfig, ViewportChaosConfig } from './types';
 
 export class PrimalEngine {
   private page: Page;
@@ -214,6 +215,10 @@ export class PrimalEngine {
   }
 
   private async runGorilla(config: SiteConfig): Promise<void> {
+    if (config.viewportChaosConfig && config.viewportChaosConfig.enabled) {
+      await ViewportFuzzer.fuzzViewport(this.page);
+    }
+
     await this.scrollAndExplore();
     await this.fuzzForms();
 

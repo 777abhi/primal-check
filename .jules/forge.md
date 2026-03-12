@@ -94,3 +94,8 @@ Constraint: Ensure all browser instances spawned in the matrix are properly clos
 Decision: Introduced `HeuristicFuzzer` and replaced simple random string generation in `ChaosFuzzer` and `StorageFuzzer` with heuristic-based mutations.
 Reasoning: Simple random strings do not adequately stress-test boundary conditions or uncover security vulnerabilities (e.g., SQLi, XSS, numerical overflows) during chaos testing.
 Constraint: Ensure all string and number fuzzing operations defer to `HeuristicFuzzer` to maintain consistency across the codebase.
+
+2026-03-11 - [Viewport Chaos]
+Decision: Implemented `ViewportFuzzer` and integrated `viewportChaosConfig` into `GORILLA` mode.
+Reasoning: Modern web applications are highly responsive, and bugs frequently hide behind specific CSS breakpoints. Randomizing the viewport during chaos testing uncovers these hidden elements and layout shifts.
+Constraint: Viewport fuzzing must occur early in the GORILLA run (before interaction logic like Smart Navigation) to ensure the DOM layout is settled before interaction attempts.
