@@ -220,14 +220,14 @@ export class PrimalEngine {
     }
 
     await this.scrollAndExplore();
-    await this.fuzzForms();
+    await this.fuzzForms(config.excludeSelectors);
 
     if (config.storageFuzzingConfig && config.storageFuzzingConfig.enabled) {
       await StorageFuzzer.fuzz(this.page);
     }
 
     const steps = config.smartNavigationConfig?.enabled ? (config.smartNavigationConfig.steps || 1) : 1;
-    await this.performRandomInteractions(steps);
+    await this.performRandomInteractions(steps, config.excludeSelectors);
 
     if (config.plugins && config.plugins.length > 0) {
       for (const plugin of config.plugins) {
@@ -240,10 +240,16 @@ export class PrimalEngine {
     }
   }
 
-  private async performRandomInteractions(steps: number): Promise<void> {
+  private async performRandomInteractions(steps: number, excludeSelectors?: string[]): Promise<void> {
     for (let i = 0; i < steps; i++) {
       // Randomised interaction: Click an available visible button or link
-      const interactables = this.page.locator('button:visible, a:visible');
+      let locatorString = 'button:visible, a:visible';
+      if (excludeSelectors && excludeSelectors.length > 0) {
+        // Construct :not(.exclusion1, .exclusion2) and append it to each base selector part
+        const exclusions = `:not(${excludeSelectors.join(', ')})`;
+        locatorString = `button:visible${exclusions}, a:visible${exclusions}`;
+      }
+      const interactables = this.page.locator(locatorString);
       const count = await interactables.count();
 
       if (count > 0) {
@@ -263,8 +269,13 @@ export class PrimalEngine {
     }
   }
 
-  private async fuzzForms(): Promise<void> {
-    const inputs = this.page.locator('input:visible, textarea:visible, select:visible');
+  private async fuzzForms(excludeSelectors?: string[]): Promise<void> {
+    let locatorString = 'input:visible, textarea:visible, select:visible';
+    if (excludeSelectors && excludeSelectors.length > 0) {
+      const exclusions = `:not(${excludeSelectors.join(', ')})`;
+      locatorString = `input:visible${exclusions}, textarea:visible${exclusions}, select:visible${exclusions}`;
+    }
+    const inputs = this.page.locator(locatorString);
     const count = await inputs.count();
 
     for (let i = 0; i < count; i++) {
