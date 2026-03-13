@@ -104,3 +104,8 @@ Constraint: Viewport fuzzing must occur early in the GORILLA run (before interac
 Decision: Implemented SwarmOrchestrator to launch Playwright contexts using mobile device descriptors, alongside geolocation and permission fuzzing, orchestrated via DeviceSwarmConfig.
 Reasoning: Mobile usage comprises a massive proportion of web traffic, and many bugs are tied to mobile-specific capabilities like varying geolocation inputs or missing sensor permissions.
 Constraint: Browser contexts created in the swarm must be rigorously closed in the finally block to prevent zombie contexts consuming memory.
+
+2026-03-13 - [Exclude Selectors in GORILLA Mode]
+Decision: Implemented `excludeSelectors` in `SiteConfig` to selectively ignore elements during random interaction and form fuzzing using Playwright's `:not()` pseudo-class.
+Reasoning: GORILLA mode is destructive and unpredictable. Users require a foundational way to prevent the engine from interacting with explicitly dangerous UI elements (like a "Delete Production DB" button) or out-of-scope interactions (like "Logout" loops).
+Constraint: When appending exclusions to existing locators, ensure the `:not()` syntax is safely constructed and applied to every part of a comma-separated selector list to guarantee elements are truly ignored.

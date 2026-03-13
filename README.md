@@ -70,6 +70,7 @@ Designed to test application stability under random interaction.
 - **Plugin System**: Dynamically load and execute custom `PrimalPlugin` objects directly into the GORILLA mode engine without altering the core library.
 - **Cross-Browser Chaos Matrix**: Run configurations concurrently across Chromium, WebKit, and Firefox using the `--matrix` CLI flag or `matrix: true` via API.
 - **Multi-Device Swarm**: Orchestrate concurrent chaos tests across multiple emulated Playwright device profiles (e.g., 'iPhone 12', 'Pixel 5') with randomized geolocation and permissions fuzzing. Configured via `deviceSwarmConfig`.
+- **Exclude Selectors**: Pass an array of CSS selectors via `excludeSelectors` in `SiteConfig` to prevent GORILLA mode from interacting with dangerous or out-of-scope elements (like "Delete Account" buttons).
 - **Resilience**: Warns rather than failing if no interactive elements are found.
 
 ### Integrations and Analytics
@@ -114,3 +115,6 @@ The following features are planned for incremental development to enhance the ca
 
 ### Phase 18: Adaptive Fuzzing
 - **Feedback-Driven State Mutations**: Continuously learn from application responses (e.g., 500 errors) to prioritize specific input generation paths during chaos tests, evolving from blind heuristics to intelligent payloads.
+
+### Phase 19: DOM State Checkpointing
+- **Snapshot Recovery**: Introduce the ability to checkpoint the DOM state before a destructive action in GORILLA mode and restore it seamlessly if the interaction yields an unrecoverable crash, enabling longer continuous chaos sessions.

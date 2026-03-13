@@ -92,6 +92,7 @@ export interface SiteConfig {
   viewportChaosConfig?: ViewportChaosConfig;
   deviceSwarmConfig?: DeviceSwarmConfig;
   plugins?: PrimalPlugin[];
+  excludeSelectors?: string[];
 }
 
 export enum ExecutionMode {
