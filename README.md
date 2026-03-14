@@ -118,3 +118,6 @@ The following features are planned for incremental development to enhance the ca
 
 ### Phase 19: DOM State Checkpointing
 - **Snapshot Recovery**: Introduce the ability to checkpoint the DOM state before a destructive action in GORILLA mode and restore it seamlessly if the interaction yields an unrecoverable crash, enabling longer continuous chaos sessions.
+
+### Phase 20: Heuristic Self-Correction
+- **Dynamic Mutation Adjustments**: Implement an AI mechanism to track failing heuristics (like protocol errors on invalid cookie values) and adaptively adjust subsequent fuzzing payloads in real time, preventing repeated failures for the same root cause.
