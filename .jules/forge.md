@@ -109,3 +109,8 @@ Constraint: Browser contexts created in the swarm must be rigorously closed in t
 Decision: Implemented `excludeSelectors` in `SiteConfig` to selectively ignore elements during random interaction and form fuzzing using Playwright's `:not()` pseudo-class.
 Reasoning: GORILLA mode is destructive and unpredictable. Users require a foundational way to prevent the engine from interacting with explicitly dangerous UI elements (like a "Delete Production DB" button) or out-of-scope interactions (like "Logout" loops).
 Constraint: When appending exclusions to existing locators, ensure the `:not()` syntax is safely constructed and applied to every part of a comma-separated selector list to guarantee elements are truly ignored.
+
+2026-03-14 - [Fuzzer Robustness Improvements]
+Decision: Added try-catch blocks to context.addCookies in StorageFuzzer and a fallback input filler in ChaosFuzzer.
+Reasoning: Heuristic payloads like null bytes cause Playwright to throw Protocol errors when added as cookies. Fuzzing should be resilient and continue executing other mutations when an invalid input is rejected by the browser API or unhandled element type is encountered.
+Constraint: Ensure all external calls that can throw synchronous exceptions due to invalid input logic in fuzzer strategies are wrapped in try-catch to prevent engine halting.

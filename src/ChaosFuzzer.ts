@@ -45,6 +45,8 @@ export class ChaosFuzzer {
       await input.fill(HeuristicFuzzer.mutateNumber());
     } else if (['date', 'datetime-local'].includes(type)) {
       await input.fill('2024-01-01');
+    } else {
+      await input.fill(HeuristicFuzzer.mutateString('RandomString')); // Fallback
     }
   }
 }

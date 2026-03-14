@@ -36,7 +36,11 @@ export class StorageFuzzer {
             secure: cookie.secure,
             sameSite: cookie.sameSite
         };
-        await context.addCookies([newCookie]);
+        try {
+            await context.addCookies([newCookie]);
+        } catch (e) {
+            console.warn('Failed to add mutated cookie:', e);
+        }
       }
     }
   }
