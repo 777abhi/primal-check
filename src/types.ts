@@ -76,6 +76,10 @@ export interface DeviceSwarmConfig {
   fuzzPermissions?: boolean;
 }
 
+export interface DOMCheckpointConfig {
+  enabled: boolean;
+}
+
 export interface SiteConfig {
   name: string;
   url: string;
@@ -91,6 +95,7 @@ export interface SiteConfig {
   visualRegressionConfig?: VisualRegressionConfig;
   viewportChaosConfig?: ViewportChaosConfig;
   deviceSwarmConfig?: DeviceSwarmConfig;
+  domCheckpointConfig?: DOMCheckpointConfig;
   plugins?: PrimalPlugin[];
   excludeSelectors?: string[];
 }

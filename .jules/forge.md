@@ -114,3 +114,8 @@ Constraint: When appending exclusions to existing locators, ensure the `:not()` 
 Decision: Added try-catch blocks to context.addCookies in StorageFuzzer and a fallback input filler in ChaosFuzzer.
 Reasoning: Heuristic payloads like null bytes cause Playwright to throw Protocol errors when added as cookies. Fuzzing should be resilient and continue executing other mutations when an invalid input is rejected by the browser API or unhandled element type is encountered.
 Constraint: Ensure all external calls that can throw synchronous exceptions due to invalid input logic in fuzzer strategies are wrapped in try-catch to prevent engine halting.
+
+2026-03-15 - [Phase 19: DOM State Checkpointing]
+Decision: Implemented DOM State Checkpointing via `DOMCheckpointConfig` in `GORILLA` mode.
+Reasoning: To restore the page state when destructive interactions occur (like removing the body element), enabling longer and more effective continuous chaos sessions.
+Constraint: The checkpoint must be safely captured and restored using `page.content()` and `page.setContent()`. Any restoration errors should be caught and logged without crashing the engine.
