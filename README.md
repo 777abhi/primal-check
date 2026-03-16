@@ -66,7 +66,7 @@ Designed to test application stability under random interaction.
 - **Network Chaos**: Simulates network instability (offline mode, latency, request failures) to test resilience against connectivity issues.
 - **Cookie & LocalStorage Fuzzing**: Randomly clear or use heuristic-based mutations (SQLi, XSS, overflow) on cookies and local storage to test state persistence and session handling.
 - **Viewport Chaos**: Dynamically randomizes the browser viewport to stress-test responsive breakpoints and uncover hidden element bugs during execution. Configured via `viewportChaosConfig`.
-- **Smart Navigation**: Performs a configurable series of interactions ("walk") by identifying and interacting with random visible elements instead of a single interaction.
+- **Smart Navigation**: Performs a configurable series of interactions ("walk") by identifying and interacting with random visible elements instead of a single interaction. Configurable with an `exploratory` strategy to act as an **Exploratory Agent**, prioritizing unvisited elements and critical user flows over purely random clicks.
 - **Plugin System**: Dynamically load and execute custom `PrimalPlugin` objects directly into the GORILLA mode engine without altering the core library.
 - **Cross-Browser Chaos Matrix**: Run configurations concurrently across Chromium, WebKit, and Firefox using the `--matrix` CLI flag or `matrix: true` via API.
 - **Multi-Device Swarm**: Orchestrate concurrent chaos tests across multiple emulated Playwright device profiles (e.g., 'iPhone 12', 'Pixel 5') with randomized geolocation and permissions fuzzing. Configured via `deviceSwarmConfig`.
@@ -90,8 +90,10 @@ Designed to test application stability under random interaction.
 The following features are planned for incremental development to enhance the capabilities of Primal Check:
 
 ### Phase 6: AI & Intelligent Automation
-- **Exploratory Agent**: Autonomous agent that learns to navigate the site effectively using RL or LLM guidance, prioritizing critical user flows over random clicks.
 - **Self-Healing Tests**: Using AI to automatically repair selectors or logic when the UI changes, reducing maintenance overhead.
+
+### Phase 22: Fuzzing Payload Optimization
+- **Payload Minimization**: Automatically attempt to shrink the size of payloads that trigger failures to find the minimal reproducible state for easier debugging.
 
 ### Phase 3: Visual Verification
 - **AI-Powered Analysis**: Analyze screenshots for potential UI issues or anomalies using AI models.

@@ -4,12 +4,14 @@ import { ChaosFuzzer } from './ChaosFuzzer';
 import { StorageFuzzer } from './StorageFuzzer';
 import { ViewportFuzzer } from './ViewportFuzzer';
 import { NetworkTrafficAnalyzer } from './NetworkTrafficAnalyzer';
+import { ExploratoryNavigator } from './ExploratoryNavigator';
 import { Reporter } from './Reporter';
 import { WebhookDispatcher } from './WebhookDispatcher';
 import { VisualRegressionAnalyzer } from './VisualRegressionAnalyzer';
 import * as path from 'path';
 import AxeBuilder from '@axe-core/playwright';
 
+export { ExploratoryNavigator } from './ExploratoryNavigator';
 export { SiteConfig, ExecutionMode, ScreenshotConfig, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig, NetworkTrafficConfig, SmartNavigationConfig, ReportConfig, WebhookConfig, TracingConfig, VisualRegressionConfig, ViewportChaosConfig, DeviceSwarmConfig, DOMCheckpointConfig } from './types';
 
 export class PrimalEngine {
@@ -227,7 +229,14 @@ export class PrimalEngine {
     }
 
     const steps = config.smartNavigationConfig?.enabled ? (config.smartNavigationConfig.steps || 1) : 1;
-    await this.performRandomInteractions(steps, config);
+    const strategy = config.smartNavigationConfig?.strategy || 'random';
+
+    if (strategy === 'exploratory') {
+      const navigator = new ExploratoryNavigator(this.page);
+      await navigator.performExploratoryInteractions(steps, config);
+    } else {
+      await this.performRandomInteractions(steps, config);
+    }
 
     if (config.plugins && config.plugins.length > 0) {
       for (const plugin of config.plugins) {
