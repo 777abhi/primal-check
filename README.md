@@ -71,6 +71,7 @@ Designed to test application stability under random interaction.
 - **Cross-Browser Chaos Matrix**: Run configurations concurrently across Chromium, WebKit, and Firefox using the `--matrix` CLI flag or `matrix: true` via API.
 - **Multi-Device Swarm**: Orchestrate concurrent chaos tests across multiple emulated Playwright device profiles (e.g., 'iPhone 12', 'Pixel 5') with randomized geolocation and permissions fuzzing. Configured via `deviceSwarmConfig`.
 - **Exclude Selectors**: Pass an array of CSS selectors via `excludeSelectors` in `SiteConfig` to prevent GORILLA mode from interacting with dangerous or out-of-scope elements (like "Delete Account" buttons).
+- **DOM State Checkpointing**: Checkpoints the DOM state before destructive actions and restores it seamlessly if the interaction yields an unrecoverable crash, enabling longer continuous chaos sessions. Configured via `domCheckpointConfig`.
 - **Resilience**: Warns rather than failing if no interactive elements are found.
 
 ### Integrations and Analytics
@@ -116,8 +117,8 @@ The following features are planned for incremental development to enhance the ca
 ### Phase 18: Adaptive Fuzzing
 - **Feedback-Driven State Mutations**: Continuously learn from application responses (e.g., 500 errors) to prioritize specific input generation paths during chaos tests, evolving from blind heuristics to intelligent payloads.
 
-### Phase 19: DOM State Checkpointing
-- **Snapshot Recovery**: Introduce the ability to checkpoint the DOM state before a destructive action in GORILLA mode and restore it seamlessly if the interaction yields an unrecoverable crash, enabling longer continuous chaos sessions.
-
 ### Phase 20: Heuristic Self-Correction
 - **Dynamic Mutation Adjustments**: Implement an AI mechanism to track failing heuristics (like protocol errors on invalid cookie values) and adaptively adjust subsequent fuzzing payloads in real time, preventing repeated failures for the same root cause.
+
+### Phase 21: Auto-Generated Chaos Strategies
+- **Dynamic AI Prompting**: Utilize LLMs to automatically generate custom plugin strategies per-run by reading the site's initial DOM structure and suggesting tailored chaos actions.

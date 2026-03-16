@@ -1,5 +1,5 @@
 import { Page } from '@playwright/test';
-import { SiteConfig, ExecutionMode, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig, NetworkTrafficConfig, SmartNavigationConfig, ReportConfig, WebhookConfig, TracingConfig, VisualRegressionConfig, ViewportChaosConfig, DeviceSwarmConfig } from './types';
+import { SiteConfig, ExecutionMode, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig, NetworkTrafficConfig, SmartNavigationConfig, ReportConfig, WebhookConfig, TracingConfig, VisualRegressionConfig, ViewportChaosConfig, DeviceSwarmConfig, DOMCheckpointConfig } from './types';
 import { ChaosFuzzer } from './ChaosFuzzer';
 import { StorageFuzzer } from './StorageFuzzer';
 import { ViewportFuzzer } from './ViewportFuzzer';
@@ -10,7 +10,7 @@ import { VisualRegressionAnalyzer } from './VisualRegressionAnalyzer';
 import * as path from 'path';
 import AxeBuilder from '@axe-core/playwright';
 
-export { SiteConfig, ExecutionMode, ScreenshotConfig, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig, NetworkTrafficConfig, SmartNavigationConfig, ReportConfig, WebhookConfig, TracingConfig, VisualRegressionConfig, ViewportChaosConfig, DeviceSwarmConfig } from './types';
+export { SiteConfig, ExecutionMode, ScreenshotConfig, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig, NetworkTrafficConfig, SmartNavigationConfig, ReportConfig, WebhookConfig, TracingConfig, VisualRegressionConfig, ViewportChaosConfig, DeviceSwarmConfig, DOMCheckpointConfig } from './types';
 
 export class PrimalEngine {
   private page: Page;
@@ -227,7 +227,7 @@ export class PrimalEngine {
     }
 
     const steps = config.smartNavigationConfig?.enabled ? (config.smartNavigationConfig.steps || 1) : 1;
-    await this.performRandomInteractions(steps, config.excludeSelectors);
+    await this.performRandomInteractions(steps, config);
 
     if (config.plugins && config.plugins.length > 0) {
       for (const plugin of config.plugins) {
@@ -240,8 +240,20 @@ export class PrimalEngine {
     }
   }
 
-  private async performRandomInteractions(steps: number, excludeSelectors?: string[]): Promise<void> {
+  private async performRandomInteractions(steps: number, config: SiteConfig): Promise<void> {
+    const excludeSelectors = config.excludeSelectors;
+    const checkpointEnabled = config.domCheckpointConfig?.enabled;
+
     for (let i = 0; i < steps; i++) {
+      let checkpoint: string | null = null;
+      if (checkpointEnabled) {
+        try {
+          checkpoint = await this.page.content();
+        } catch (e) {
+          console.warn('Failed to capture DOM checkpoint:', e);
+        }
+      }
+
       // Randomised interaction: Click an available visible button or link
       let locatorString = 'button:visible, a:visible';
       if (excludeSelectors && excludeSelectors.length > 0) {
@@ -259,8 +271,25 @@ export class PrimalEngine {
           await interactables.nth(randomIndex).click();
           // Wait for network idle to allow potential navigation or fetch requests to complete
           await this.page.waitForLoadState('networkidle').catch(() => {});
+
+          if (checkpointEnabled && checkpoint) {
+             const bodyVisible = await this.page.isVisible('body');
+             if (!bodyVisible) {
+               throw new Error('Body is no longer visible after interaction.');
+             }
+          }
         } catch (e) {
-          console.warn('Failed to click interactable:', e);
+          console.warn('Failed to click interactable or maintain DOM state:', e);
+          if (checkpointEnabled && checkpoint) {
+            console.warn('Restoring DOM from checkpoint...');
+            try {
+              await this.page.setContent(checkpoint);
+              // Wait for network idle after restoring state
+              await this.page.waitForLoadState('networkidle').catch(() => {});
+            } catch (restoreError) {
+              console.warn('Failed to restore DOM from checkpoint:', restoreError);
+            }
+          }
         }
       } else {
         console.warn('No visible buttons or links found to interact with.');
