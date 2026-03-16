@@ -119,3 +119,8 @@ Constraint: Ensure all external calls that can throw synchronous exceptions due 
 Decision: Implemented DOM State Checkpointing via `DOMCheckpointConfig` in `GORILLA` mode.
 Reasoning: To restore the page state when destructive interactions occur (like removing the body element), enabling longer and more effective continuous chaos sessions.
 Constraint: The checkpoint must be safely captured and restored using `page.content()` and `page.setContent()`. Any restoration errors should be caught and logged without crashing the engine.
+
+2026-03-16 - [Phase 6: Exploratory Agent]
+Decision: Implemented `ExploratoryNavigator` and added an `exploratory` strategy to `SmartNavigationConfig`.
+Reasoning: Purely random interactions frequently click the same element multiple times, reducing chaos coverage. Tracking visited elements via their `outerHTML` enables the engine to explore deeper into the DOM tree.
+Constraint: When collecting element states to determine if they've been visited, wrap in try-catch to avoid crashing if elements detach during enumeration.

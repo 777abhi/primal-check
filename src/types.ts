@@ -38,6 +38,7 @@ export interface NetworkTrafficConfig {
 export interface SmartNavigationConfig {
   enabled: boolean;
   steps?: number; // Number of interactions
+  strategy?: 'random' | 'exploratory'; // Default is 'random'
 }
 
 export interface ReportConfig {
