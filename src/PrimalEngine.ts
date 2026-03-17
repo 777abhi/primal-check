@@ -5,6 +5,7 @@ import { StorageFuzzer } from './StorageFuzzer';
 import { ViewportFuzzer } from './ViewportFuzzer';
 import { NetworkTrafficAnalyzer } from './NetworkTrafficAnalyzer';
 import { ExploratoryNavigator } from './ExploratoryNavigator';
+import { HeuristicFuzzer } from './HeuristicFuzzer';
 import { Reporter } from './Reporter';
 import { WebhookDispatcher } from './WebhookDispatcher';
 import { VisualRegressionAnalyzer } from './VisualRegressionAnalyzer';
@@ -221,11 +222,13 @@ export class PrimalEngine {
       await ViewportFuzzer.fuzzViewport(this.page);
     }
 
+    const fuzzer = new HeuristicFuzzer();
+
     await this.scrollAndExplore();
-    await this.fuzzForms(config.excludeSelectors);
+    await this.fuzzForms(config.excludeSelectors, fuzzer);
 
     if (config.storageFuzzingConfig && config.storageFuzzingConfig.enabled) {
-      await StorageFuzzer.fuzz(this.page);
+      await StorageFuzzer.fuzz(this.page, fuzzer);
     }
 
     const steps = config.smartNavigationConfig?.enabled ? (config.smartNavigationConfig.steps || 1) : 1;
@@ -307,7 +310,7 @@ export class PrimalEngine {
     }
   }
 
-  private async fuzzForms(excludeSelectors?: string[]): Promise<void> {
+  private async fuzzForms(excludeSelectors: string[] | undefined, fuzzer: HeuristicFuzzer): Promise<void> {
     let locatorString = 'input:visible, textarea:visible, select:visible';
     if (excludeSelectors && excludeSelectors.length > 0) {
       const exclusions = `:not(${excludeSelectors.join(', ')})`;
@@ -318,7 +321,7 @@ export class PrimalEngine {
 
     for (let i = 0; i < count; i++) {
       const input = inputs.nth(i);
-      await ChaosFuzzer.fuzzInput(input);
+      await ChaosFuzzer.fuzzInput(input, fuzzer);
     }
   }
 

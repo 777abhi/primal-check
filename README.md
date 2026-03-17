@@ -116,8 +116,8 @@ The following features are planned for incremental development to enhance the ca
 ### Phase 16: Intelligent Exploit Generation
 - **Automated Exploit chaining**: Beyond heuristics, use a local LLM to string together discovered vulnerabilities (e.g., finding an XSS via HeuristicFuzzer and attempting to weaponize it to steal the session token).
 
-### Phase 18: Adaptive Fuzzing
-- **Feedback-Driven State Mutations**: Continuously learn from application responses (e.g., 500 errors) to prioritize specific input generation paths during chaos tests, evolving from blind heuristics to intelligent payloads.
+### Phase 23: Stateful Chaos Modeling (Future Improvement)
+- **Markov Chain Navigation**: Beyond simple random clicks, implement a state machine that learns the probability of moving from one view to another and biases testing toward high-value states, simulating real user session flows dynamically.
 
 ### Phase 20: Heuristic Self-Correction
 - **Dynamic Mutation Adjustments**: Implement an AI mechanism to track failing heuristics (like protocol errors on invalid cookie values) and adaptively adjust subsequent fuzzing payloads in real time, preventing repeated failures for the same root cause.
