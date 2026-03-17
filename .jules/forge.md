@@ -124,3 +124,8 @@ Constraint: The checkpoint must be safely captured and restored using `page.cont
 Decision: Implemented `ExploratoryNavigator` and added an `exploratory` strategy to `SmartNavigationConfig`.
 Reasoning: Purely random interactions frequently click the same element multiple times, reducing chaos coverage. Tracking visited elements via their `outerHTML` enables the engine to explore deeper into the DOM tree.
 Constraint: When collecting element states to determine if they've been visited, wrap in try-catch to avoid crashing if elements detach during enumeration.
+
+2026-03-17 - [Phase 18: Adaptive Fuzzing]
+Decision: Refactored `HeuristicFuzzer` from a static utility class to an instantiated class passed to `ChaosFuzzer` and `StorageFuzzer`. Implemented dynamic probability weights via `recordFailure`.
+Reasoning: To prevent cross-test state pollution (since `SwarmOrchestrator` runs instances concurrently) while allowing the fuzzer to adaptively penalize failing strategies (e.g. protocol errors during cookie mutation) for the duration of a specific test run.
+Constraint: Avoid storing cross-test state in static class members; always favor dependency injection of instances for fuzzer state.
