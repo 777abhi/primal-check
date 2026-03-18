@@ -129,3 +129,8 @@ Constraint: When collecting element states to determine if they've been visited,
 Decision: Refactored `HeuristicFuzzer` from a static utility class to an instantiated class passed to `ChaosFuzzer` and `StorageFuzzer`. Implemented dynamic probability weights via `recordFailure`.
 Reasoning: To prevent cross-test state pollution (since `SwarmOrchestrator` runs instances concurrently) while allowing the fuzzer to adaptively penalize failing strategies (e.g. protocol errors during cookie mutation) for the duration of a specific test run.
 Constraint: Avoid storing cross-test state in static class members; always favor dependency injection of instances for fuzzer state.
+
+2026-03-18 - [Phase 22: Fuzzing Payload Optimization]
+Decision: Implemented `PayloadMinimizer` using a Delta Debugging-inspired algorithm to shrink failing fuzzing payloads. Integrated it directly into the `ChaosFuzzer` error-handling catch block.
+Reasoning: Large generated payloads (like 10,000 'A's) are difficult to debug when they cause an application exception or Playwright interaction failure. By automatically finding the minimal substring that still triggers the failure, we significantly reduce debugging time for the end user.
+Constraint: The minimization process involves re-executing the failed action multiple times, which can be slow and potentially alter application state further. It should only be triggered conditionally when an error is caught, and must run efficiently.
