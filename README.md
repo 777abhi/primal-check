@@ -73,6 +73,7 @@ Designed to test application stability under random interaction.
 - **Exclude Selectors**: Pass an array of CSS selectors via `excludeSelectors` in `SiteConfig` to prevent GORILLA mode from interacting with dangerous or out-of-scope elements (like "Delete Account" buttons).
 - **DOM State Checkpointing**: Checkpoints the DOM state before destructive actions and restores it seamlessly if the interaction yields an unrecoverable crash, enabling longer continuous chaos sessions. Configured via `domCheckpointConfig`.
 - **Resilience**: Warns rather than failing if no interactive elements are found.
+- **Fuzzing Payload Minimization**: When a fuzzing payload causes an interaction error (e.g., input rejection), Primal Check automatically attempts to shrink the size of the payload to find the minimal reproducible string for easier debugging.
 
 ### Integrations and Analytics
 - **Webhooks**: Automatically dispatch test run results and JSON payloads to external CI/CD platforms or messaging services. Configured via `webhookConfig`.
@@ -91,9 +92,6 @@ The following features are planned for incremental development to enhance the ca
 
 ### Phase 6: AI & Intelligent Automation
 - **Self-Healing Tests**: Using AI to automatically repair selectors or logic when the UI changes, reducing maintenance overhead.
-
-### Phase 22: Fuzzing Payload Optimization
-- **Payload Minimization**: Automatically attempt to shrink the size of payloads that trigger failures to find the minimal reproducible state for easier debugging.
 
 ### Phase 3: Visual Verification
 - **AI-Powered Analysis**: Analyze screenshots for potential UI issues or anomalies using AI models.
@@ -124,3 +122,6 @@ The following features are planned for incremental development to enhance the ca
 
 ### Phase 21: Auto-Generated Chaos Strategies
 - **Dynamic AI Prompting**: Utilize LLMs to automatically generate custom plugin strategies per-run by reading the site's initial DOM structure and suggesting tailored chaos actions.
+
+### Phase 24: Intelligent DOM Snapshot Diffing
+- **Semantic State Comparison**: Beyond simple pixel matching, implement an intelligent comparison of DOM state checkpoints to understand if two visual views are structurally the same but populated with different data, reducing false positives in chaos reporting.
