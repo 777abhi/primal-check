@@ -134,3 +134,8 @@ Constraint: Avoid storing cross-test state in static class members; always favor
 Decision: Implemented `PayloadMinimizer` using a Delta Debugging-inspired algorithm to shrink failing fuzzing payloads. Integrated it directly into the `ChaosFuzzer` error-handling catch block.
 Reasoning: Large generated payloads (like 10,000 'A's) are difficult to debug when they cause an application exception or Playwright interaction failure. By automatically finding the minimal substring that still triggers the failure, we significantly reduce debugging time for the end user.
 Constraint: The minimization process involves re-executing the failed action multiple times, which can be slow and potentially alter application state further. It should only be triggered conditionally when an error is caught, and must run efficiently.
+
+2026-03-19 - [Phase 23: Stateful Chaos Modeling]
+Decision: Implemented `StatefulNavigator` with a `stateful` strategy in `SmartNavigationConfig`.
+Reasoning: Random interactions often revisit the same views repeatedly. By capturing page state (via URL hash or DOM signature) and building a transition matrix (a foundational Markov chain approach), the engine can track which views lead to which other views over time, simulating real user session flows and providing a mechanism to bias interactions toward less-explored states in the future.
+Constraint: State identification is complex; for the initial implementation, simple URL/hash identification is used to establish the architecture, as deeper DOM skeleton tracking carries heavy performance overhead.
