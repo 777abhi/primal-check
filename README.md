@@ -74,6 +74,7 @@ Designed to test application stability under random interaction.
 - **DOM State Checkpointing**: Checkpoints the DOM state before destructive actions and restores it seamlessly if the interaction yields an unrecoverable crash, enabling longer continuous chaos sessions. Configured via `domCheckpointConfig`.
 - **Resilience**: Warns rather than failing if no interactive elements are found.
 - **Fuzzing Payload Minimization**: When a fuzzing payload causes an interaction error (e.g., input rejection), Primal Check automatically attempts to shrink the size of the payload to find the minimal reproducible string for easier debugging.
+- **Stateful Chaos Modeling**: Beyond simple random clicks, implements a basic state machine (Markov Chain approach) that learns the probability of moving from one view to another and dynamically tracks transitions, simulating real user session flows and providing a mechanism to bias interactions. Configurable via `smartNavigationConfig.strategy = 'stateful'`.
 
 ### Integrations and Analytics
 - **Webhooks**: Automatically dispatch test run results and JSON payloads to external CI/CD platforms or messaging services. Configured via `webhookConfig`.
@@ -114,9 +115,6 @@ The following features are planned for incremental development to enhance the ca
 ### Phase 16: Intelligent Exploit Generation
 - **Automated Exploit chaining**: Beyond heuristics, use a local LLM to string together discovered vulnerabilities (e.g., finding an XSS via HeuristicFuzzer and attempting to weaponize it to steal the session token).
 
-### Phase 23: Stateful Chaos Modeling (Future Improvement)
-- **Markov Chain Navigation**: Beyond simple random clicks, implement a state machine that learns the probability of moving from one view to another and biases testing toward high-value states, simulating real user session flows dynamically.
-
 ### Phase 20: Heuristic Self-Correction
 - **Dynamic Mutation Adjustments**: Implement an AI mechanism to track failing heuristics (like protocol errors on invalid cookie values) and adaptively adjust subsequent fuzzing payloads in real time, preventing repeated failures for the same root cause.
 
@@ -125,3 +123,6 @@ The following features are planned for incremental development to enhance the ca
 
 ### Phase 24: Intelligent DOM Snapshot Diffing
 - **Semantic State Comparison**: Beyond simple pixel matching, implement an intelligent comparison of DOM state checkpoints to understand if two visual views are structurally the same but populated with different data, reducing false positives in chaos reporting.
+
+### Phase 25: Enhanced Stateful Modeling (Future Improvement)
+- **Visual Node Clustering**: Upgrade `StatefulNavigator`'s state detection from simple URL parsing to a lightweight structural DOM hashing algorithm. This would allow the engine to understand when a modal opens over an existing view, treating it as a new distinct sub-state even if the URL does not change.

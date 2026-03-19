@@ -5,6 +5,7 @@ import { StorageFuzzer } from './StorageFuzzer';
 import { ViewportFuzzer } from './ViewportFuzzer';
 import { NetworkTrafficAnalyzer } from './NetworkTrafficAnalyzer';
 import { ExploratoryNavigator } from './ExploratoryNavigator';
+import { StatefulNavigator } from './StatefulNavigator';
 import { HeuristicFuzzer } from './HeuristicFuzzer';
 import { Reporter } from './Reporter';
 import { WebhookDispatcher } from './WebhookDispatcher';
@@ -13,6 +14,7 @@ import * as path from 'path';
 import AxeBuilder from '@axe-core/playwright';
 
 export { ExploratoryNavigator } from './ExploratoryNavigator';
+export { StatefulNavigator } from './StatefulNavigator';
 export { SiteConfig, ExecutionMode, ScreenshotConfig, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig, NetworkTrafficConfig, SmartNavigationConfig, ReportConfig, WebhookConfig, TracingConfig, VisualRegressionConfig, ViewportChaosConfig, DeviceSwarmConfig, DOMCheckpointConfig } from './types';
 
 export class PrimalEngine {
@@ -237,6 +239,13 @@ export class PrimalEngine {
     if (strategy === 'exploratory') {
       const navigator = new ExploratoryNavigator(this.page);
       await navigator.performExploratoryInteractions(steps, config);
+    } else if (strategy === 'stateful') {
+      const navigator = new StatefulNavigator(this.page);
+      await navigator.performStatefulInteractions(steps, config);
+      const matrix = navigator.getTransitionMatrix();
+      if (Object.keys(matrix).length > 0) {
+        console.log(`[Stateful Chaos] Navigation complete. Transition matrix summary: ${Object.keys(matrix).length} states visited.`);
+      }
     } else {
       await this.performRandomInteractions(steps, config);
     }
