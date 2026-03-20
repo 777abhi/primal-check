@@ -13,9 +13,54 @@ export class StatefulNavigator {
   }
 
   private async captureState(): Promise<string> {
-    // For simplicity, we define a state by its URL path + hash
-    // In more complex implementations, this could be a DOM skeleton hash
-    return await this.page.evaluate(() => window.location.pathname + window.location.hash);
+    // We define state by combining the URL path/hash with a lightweight structural DOM hash.
+    // This allows detecting sub-states like modals that don't change the URL.
+    return await this.page.evaluate(() => {
+      const urlPart = window.location.pathname + window.location.hash;
+
+      // Basic recursive function to build a structural skeleton of visible elements
+      function buildSkeleton(element: Element): string {
+        // Skip text nodes and comments (handled implicitly by iterating over Element children)
+        // Skip hidden elements to focus on visual state.
+        // offsetWidth and offsetHeight is a very fast way to check if an element is visibly rendered,
+        // avoiding the expensive getComputedStyle call recursively.
+        if (element instanceof HTMLElement) {
+          if (element.offsetWidth === 0 && element.offsetHeight === 0) {
+            return '';
+          }
+        }
+
+        let skeleton = '<' + element.tagName.toLowerCase();
+
+        // Include structural attributes like id, type for inputs, or custom roles if needed
+        if (element.id) {
+            skeleton += '#' + element.id;
+        }
+
+        skeleton += '>';
+
+        for (let i = 0; i < element.children.length; i++) {
+          skeleton += buildSkeleton(element.children[i]);
+        }
+
+        skeleton += '</' + element.tagName.toLowerCase() + '>';
+        return skeleton;
+      }
+
+      // Hash function (djb2) to keep the string short
+      function hashString(str: string): number {
+        let hash = 5381;
+        for (let i = 0; i < str.length; i++) {
+          hash = (hash * 33) ^ str.charCodeAt(i);
+        }
+        return hash >>> 0;
+      }
+
+      const domSkeleton = buildSkeleton(document.body);
+      const domHash = hashString(domSkeleton).toString(16);
+
+      return urlPart + '|' + domHash;
+    });
   }
 
   async performStatefulInteractions(steps: number, config: SiteConfig): Promise<void> {

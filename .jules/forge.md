@@ -139,3 +139,8 @@ Constraint: The minimization process involves re-executing the failed action mul
 Decision: Implemented `StatefulNavigator` with a `stateful` strategy in `SmartNavigationConfig`.
 Reasoning: Random interactions often revisit the same views repeatedly. By capturing page state (via URL hash or DOM signature) and building a transition matrix (a foundational Markov chain approach), the engine can track which views lead to which other views over time, simulating real user session flows and providing a mechanism to bias interactions toward less-explored states in the future.
 Constraint: State identification is complex; for the initial implementation, simple URL/hash identification is used to establish the architecture, as deeper DOM skeleton tracking carries heavy performance overhead.
+
+2026-03-20 - [Phase 25: Enhanced Stateful Modeling (Visual Node Clustering)]
+Decision: Upgraded `StatefulNavigator`'s state detection from simple URL parsing to a lightweight structural DOM hashing algorithm.
+Reasoning: To understand when a modal opens over an existing view, treating it as a new distinct sub-state even if the URL does not change.
+Constraint: The structural hashing must remain lightweight (e.g., using a short `djb2` hash over simple `tagName` and `id`) to avoid excessive performance overhead on every interaction step.

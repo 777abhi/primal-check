@@ -87,4 +87,76 @@ test.describe('Stateful Chaos Modeling', () => {
     });
     expect(visitedStates.size).toBe(3);
   });
+
+  test('should detect state changes based on structural DOM hashing even when URL remains constant', async () => {
+    let loggedStates = 0;
+
+    // We capture the log directly.
+    // The console logs in Node might be slightly delayed, so let's use a global counter
+    // attached to the page's log interceptor.
+    page.on('console', msg => {
+      const text = msg.text();
+      const match = text.match(/Transition matrix summary: (\d+) states visited/);
+      if (match) {
+        loggedStates = parseInt(match[1], 10);
+      }
+    });
+
+    // We override console.log in the Node.js context because the output comes from `src/PrimalEngine.ts`,
+    // which runs in Node, NOT in the browser page evaluation.
+    const originalLog = console.log;
+    console.log = function(...args) {
+      const msg = args.join(' ');
+      const match = msg.match(/Transition matrix summary: (\d+) states visited/);
+      if (match) {
+        loggedStates = parseInt(match[1], 10);
+      }
+      originalLog.apply(console, args);
+    };
+
+    await page.route(config.url, async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'text/html',
+        body: `
+          <html>
+            <body>
+              <div id="main-view">
+                <h1>Main View</h1>
+                <button id="open-modal" onclick="document.getElementById('modal').style.display='block'; window.lastTransition='OpenModal';">Open Modal</button>
+              </div>
+              <div id="modal" style="display: none;">
+                <h1>Modal</h1>
+                <button id="close-modal" onclick="document.getElementById('modal').style.display='none'; window.lastTransition='CloseModal';">Close Modal</button>
+              </div>
+              <script>
+                 window.transitions = [];
+                 Object.defineProperty(window, 'lastTransition', {
+                   set: function(val) {
+                     window.transitions.push(val);
+                   }
+                 });
+              </script>
+            </body>
+          </html>
+        `,
+      });
+    });
+
+    await engine.run(config, ExecutionMode.GORILLA);
+
+    // Wait a brief moment to ensure all async console events from Playwright are processed
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    // Ensure the engine made at least one successful transition in the mock app
+    const transitions = await page.evaluate(() => (window as any).transitions || []);
+    expect(transitions.length).toBeGreaterThan(0);
+
+    // Restore original console.log
+    console.log = originalLog;
+
+    // We expect the matrix to show multiple distinct states visited, even without URL changes
+    // This asserts that the DOM hashing logic successfully identified the modal open/close as distinct views.
+    expect(loggedStates).toBeGreaterThan(1);
+  });
 });
