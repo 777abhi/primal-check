@@ -75,6 +75,7 @@ Designed to test application stability under random interaction.
 - **Resilience**: Warns rather than failing if no interactive elements are found.
 - **Fuzzing Payload Minimization**: When a fuzzing payload causes an interaction error (e.g., input rejection), Primal Check automatically attempts to shrink the size of the payload to find the minimal reproducible string for easier debugging.
 - **Stateful Chaos Modeling**: Beyond simple random clicks, implements a basic state machine (Markov Chain approach) that learns the probability of moving from one view to another and dynamically tracks transitions, simulating real user session flows and providing a mechanism to bias interactions. Configurable via `smartNavigationConfig.strategy = 'stateful'`. Uses lightweight structural DOM hashing to detect sub-states (e.g., modals) even when URLs do not change.
+- **Real-time Threat Intelligence**: Dynamically download and inject known vulnerability payloads from external JSON feeds into chaos runs, allowing tests to stay updated with current exploits without package updates. Configured via `threatIntelligenceConfig`.
 
 ### Integrations and Analytics
 - **Webhooks**: Automatically dispatch test run results and JSON payloads to external CI/CD platforms or messaging services. Configured via `webhookConfig`.
@@ -124,5 +125,5 @@ The following features are planned for incremental development to enhance the ca
 ### Phase 24: Intelligent DOM Snapshot Diffing
 - **Semantic State Comparison**: Beyond simple pixel matching, implement an intelligent comparison of DOM state checkpoints to understand if two visual views are structurally the same but populated with different data, reducing false positives in chaos reporting.
 
-### Phase 26: Real-time Threat Intelligence (Future Improvement)
-- **Threat Intelligence Sync**: Integrate a live feed of common CVEs and exploit payloads, allowing `HeuristicFuzzer` to dynamically download and inject the latest known vulnerabilities into chaos runs without requiring package updates.
+### Phase 27: Self-Updating Exploit Kits (Future Improvement)
+- **Zero-Day Auto-Generation**: Hook into a local LLM or API to read CVE descriptions and automatically synthesize functional Playwright interactions to test for those exact vulnerabilities within hours of disclosure, moving beyond static payloads.

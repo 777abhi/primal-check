@@ -1,9 +1,13 @@
+import * as http from 'http';
+import * as https from 'https';
+
 export interface FuzzingResult {
   value: string;
   strategy: string;
 }
 
 export class HeuristicFuzzer {
+  private threatPayloads: string[] = [];
   private stringWeights: Record<string, number> = {
     'SQLi': 1.0,
     'XSS': 1.0,
@@ -31,6 +35,30 @@ export class HeuristicFuzzer {
     'Infinity': 1.0,
     '-Infinity': 1.0
   };
+
+  async syncThreatIntelligence(urls: string[]): Promise<void> {
+    for (const url of urls) {
+      try {
+        const client = url.startsWith('https') ? https : http;
+        const data = await new Promise<string>((resolve, reject) => {
+          client.get(url, (res) => {
+            let body = '';
+            res.on('data', (chunk) => body += chunk);
+            res.on('end', () => resolve(body));
+          }).on('error', reject);
+        });
+        const payloads = JSON.parse(data);
+        if (Array.isArray(payloads)) {
+          this.threatPayloads.push(...payloads.filter(p => typeof p === 'string'));
+        }
+      } catch (e) {
+        console.warn(`Failed to sync threat intelligence from ${url}:`, e);
+      }
+    }
+    if (this.threatPayloads.length > 0) {
+      this.stringWeights['ThreatIntel'] = 100.0; // High weight for high priority
+    }
+  }
 
   private selectStrategy(weights: Record<string, number>): string {
     let totalWeight = 0;
@@ -68,6 +96,7 @@ export class HeuristicFuzzer {
       case 'RTLO': value = "\u202E" + original; break;
       case 'Repetition': value = original.repeat(100); break;
       case 'PrototypePollution': value = '{"__proto__": {"isAdmin": true}}'; break;
+      case 'ThreatIntel': value = this.threatPayloads[Math.floor(Math.random() * this.threatPayloads.length)]; break;
       default: value = original; break;
     }
 

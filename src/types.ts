@@ -81,12 +81,18 @@ export interface DOMCheckpointConfig {
   enabled: boolean;
 }
 
+export interface ThreatIntelligenceConfig {
+  enabled: boolean;
+  feedUrls: string[];
+}
+
 export interface SiteConfig {
   name: string;
   url: string;
   screenshotConfig?: ScreenshotConfig;
   networkChaosConfig?: NetworkChaosConfig;
   accessibilityConfig?: AccessibilityConfig;
+  threatIntelligenceConfig?: ThreatIntelligenceConfig;
   storageFuzzingConfig?: StorageFuzzingConfig;
   networkTrafficConfig?: NetworkTrafficConfig;
   smartNavigationConfig?: SmartNavigationConfig;
