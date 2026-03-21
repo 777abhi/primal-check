@@ -144,3 +144,7 @@ Constraint: State identification is complex; for the initial implementation, sim
 Decision: Upgraded `StatefulNavigator`'s state detection from simple URL parsing to a lightweight structural DOM hashing algorithm.
 Reasoning: To understand when a modal opens over an existing view, treating it as a new distinct sub-state even if the URL does not change.
 Constraint: The structural hashing must remain lightweight (e.g., using a short `djb2` hash over simple `tagName` and `id`) to avoid excessive performance overhead on every interaction step.
+2026-03-21 - [Phase 26: Real-time Threat Intelligence]
+Decision: Integrated ThreatIntelligenceConfig into SiteConfig and syncThreatIntelligence into HeuristicFuzzer.
+Reasoning: To enable dynamic downloading and injection of exploit payloads without requiring core updates.
+Constraint: Errors during JSON payload retrieval must not crash the fuzzer, and the fuzzer should use built-in node modules (http/https).

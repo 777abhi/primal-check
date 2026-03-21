@@ -15,7 +15,7 @@ import AxeBuilder from '@axe-core/playwright';
 
 export { ExploratoryNavigator } from './ExploratoryNavigator';
 export { StatefulNavigator } from './StatefulNavigator';
-export { SiteConfig, ExecutionMode, ScreenshotConfig, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig, NetworkTrafficConfig, SmartNavigationConfig, ReportConfig, WebhookConfig, TracingConfig, VisualRegressionConfig, ViewportChaosConfig, DeviceSwarmConfig, DOMCheckpointConfig } from './types';
+export { SiteConfig, ExecutionMode, ScreenshotConfig, NetworkChaosConfig, AccessibilityConfig, StorageFuzzingConfig, NetworkTrafficConfig, SmartNavigationConfig, ReportConfig, WebhookConfig, TracingConfig, VisualRegressionConfig, ViewportChaosConfig, DeviceSwarmConfig, DOMCheckpointConfig, ThreatIntelligenceConfig } from './types';
 
 export class PrimalEngine {
   private page: Page;
@@ -225,6 +225,10 @@ export class PrimalEngine {
     }
 
     const fuzzer = new HeuristicFuzzer();
+
+    if (config.threatIntelligenceConfig?.enabled && config.threatIntelligenceConfig.feedUrls && config.threatIntelligenceConfig.feedUrls.length > 0) {
+      await fuzzer.syncThreatIntelligence(config.threatIntelligenceConfig.feedUrls);
+    }
 
     await this.scrollAndExplore();
     await this.fuzzForms(config.excludeSelectors, fuzzer);
