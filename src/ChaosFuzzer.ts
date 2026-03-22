@@ -63,6 +63,8 @@ export class ChaosFuzzer {
       result = fuzzer.mutateString('RandomString'); // Fallback
     }
 
+    if (!result) return;
+
     let fillValue = result.value === "" ? ' ' : result.value;
 
     try {
